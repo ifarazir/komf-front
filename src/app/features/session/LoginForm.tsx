@@ -1,13 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Card, Button, FormControl } from "react-bootstrap";
-import { Link, Redirect } from "@reach/router";
+import { Link, Redirect, RouteComponentProps } from "@reach/router";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
-import { selectSession, setUser } from "./sessionsSlice";
+import { selectSession, loginUser } from "./sessionsSlice";
 import { useState } from "react";
 
-export default function LoginForm() {
+import styles from "./card.module.css";
+
+export default function LoginForm(props: RouteComponentProps) {
     const [error, setError] = useState("");
     const dispatch = useDispatch();
     const sessions = useSelector(selectSession);
@@ -18,22 +20,13 @@ export default function LoginForm() {
     });
 
     const handleSubmit = (data: any) => {
-        // This is a MOCK, Please change this behavior
-        if (data.username === "admin" && data.password === "admin") {
-            dispatch(setUser({ username: "admin", password: "admin", role: "admin" }));
-            setError("");
-        } else if (data.username === "guest" && data.password === "guest") {
-            dispatch(setUser({ username: "guest", password: "guest", role: "guest" }));
-            setError("");
-        } else {
-            setError("Invalid username or password");
-        }
+        dispatch(loginUser(data));
     };
 
-    return sessions.username ? (
-        <Redirect noThrow to="/" />
+    return sessions ? (
+        <Redirect noThrow to="/panel" />
     ) : (
-        <Card className="shadow-lg">
+        <Card className={"shadow-lg " + styles.card}>
             <Card.Body>
                 <Formik initialValues={{ username: "", password: "" }} onSubmit={handleSubmit} validationSchema={schema}>
                     {({ values, handleChange, handleBlur, errors }) => (
@@ -74,7 +67,7 @@ export default function LoginForm() {
                                 <p>
                                     Don't have an acount yet?{" "}
                                     <span>
-                                        <Link to="/signup">Sign Up</Link>
+                                        <Link to="signup">Sign Up</Link>
                                     </span>
                                 </p>
                             </div>

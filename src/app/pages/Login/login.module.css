@@ -1,9 +1,0 @@
-.container {
-    width: 100vw;
-    height: 100vh;
-}
-.gradientBg {
-    flex:1;
-    background: rgb(184, 73, 214);
-    background: linear-gradient(90deg, rgba(184, 73, 214, 1) 0%, rgba(171, 5, 208, 1) 100%);
-}

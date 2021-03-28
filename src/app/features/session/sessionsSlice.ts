@@ -1,12 +1,24 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
+import {signUp, login} from '../../logic/auth';
+
+export const registerUser = createAsyncThunk('session/register', async (data:any) => {
+    const resp = await signUp(data);
+    return resp;
+})
+
+export const loginUser = createAsyncThunk('session/login', async (data:any) => {
+    const resp = await login(data);
+    return resp;
+})
 
 interface IInitial {
     session: any;
-    status: "authorized" | "unauthorized" | "error";
+    status: "authorized" | "unauthorized" | 'authorizing' | "error";
     error?: string;
 }
 
-const initialState: IInitial = { session: {}, status: "unauthorized" };
+const initialState: IInitial = { session: null, status: "unauthorized" };
 
 const sessionSlice = createSlice({
     name: "session",
@@ -15,12 +27,42 @@ const sessionSlice = createSlice({
         setUser(state, action) {
             state.session = action.payload
             state.status = 'authorized'
+        },
+        logout(state) {
+            state.session = null
         }
     },
+    extraReducers: builder => {
+        builder.addCase(registerUser.pending, (state, action) => {
+            state.status = 'authorizing'
+        })
+        builder.addCase(registerUser.fulfilled, (state, action) => {
+            state.status = 'authorized';
+            state.session = action.payload;
+            console.log(action.payload);
+        })
+        builder.addCase(registerUser.rejected, (state, action:any) => {
+            state.status = 'unauthorized';
+            state.error = action.payload.error;
+        })
+        
+        builder.addCase(loginUser.pending, (state, action) => {
+            state.status = 'authorizing'
+        })
+        builder.addCase(loginUser.fulfilled, (state, action) => {
+            state.status = 'authorized';
+            state.session = action.payload;
+            console.log(action.payload);
+        })
+        builder.addCase(loginUser.rejected, (state, action:any) => {
+            state.status = 'unauthorized';
+            state.error = action.payload.error;
+        })
+    }
 });
 
 export default sessionSlice.reducer;
 
 export const selectSession = (state:any) => state.session.session;
 
-export const {setUser} = sessionSlice.actions;
+export const {setUser, logout} = sessionSlice.actions;

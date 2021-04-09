@@ -5,6 +5,7 @@ import { Link, Redirect, RouteComponentProps } from "@reach/router";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
+import { registerType } from "../../logic/auth";
 import { selectSession, registerUser } from "./sessionsSlice";
 
 import styles from "./card.module.css";
@@ -23,6 +24,7 @@ export default function SignupForm(props: RouteComponentProps) {
 
     const handleSubmit = (data: any) => {
         dispatch(registerUser(data));
+        // console.log(data);
     };
 
     return sessions ? (
@@ -30,11 +32,7 @@ export default function SignupForm(props: RouteComponentProps) {
     ) : (
         <Card className={"shadow-lg " + styles.card}>
             <Card.Body>
-                <Formik
-                    initialValues={{ fname: "", lname: "", email: "", phone: "", password: "" }}
-                    onSubmit={handleSubmit}
-                    validationSchema={schema}
-                >
+                <Formik initialValues={{} as registerType} onSubmit={handleSubmit} validationSchema={schema}>
                     {({ values, handleChange, handleBlur, errors }) => (
                         <Form className="d-flex flex-column justify-content-between">
                             <div className="text-center mb-4">

@@ -1,18 +1,56 @@
-import Axios from 'axios';
+import Axios from "axios";
+import {TOKEN_STORAGE} from '.';
 
-export const login = async (data:any) => {
+export type registerType = {
+    fname: string;
+    lname: string;
+    email: string;
+    phone: string;
+    password: string;
+};
+
+export const getMe = async () => {
     try {
-        const resp = await Axios.post('/login', data);
+        const resp = await Axios.get('/user');
         return resp.data;
     } catch (error) {
         throw error;
     }
 }
 
-export const signUp = async (data:any) => {
+export const getMyCourses = async () => {
     try {
-        const resp = await Axios.post('/register', data);
+        const resp = await Axios.get('/user/courses');
         return resp.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const login = async (data: { email: string; password: string }) => {
+    try {
+        const resp = await Axios.post("/login", data);
+        if(resp.data.login){
+            localStorage.setItem(TOKEN_STORAGE, resp.data.token);
+        }
+        return resp.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const register = async (data: registerType) => {
+    try {
+        const resp = await Axios.post("/register", data);
+        return resp.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const logout = async () => {
+    try {
+        localStorage.removeItem(TOKEN_STORAGE);
     } catch (error) {
         throw error;
     }

@@ -1,14 +1,19 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import {signUp, login} from '../../logic/auth';
+import {register, login, getMe} from '../../logic/auth';
 
 export const registerUser = createAsyncThunk('session/register', async (data:any) => {
-    const resp = await signUp(data);
+    const resp = await register(data);
     return resp;
 })
 
 export const loginUser = createAsyncThunk('session/login', async (data:any) => {
     const resp = await login(data);
+    return resp;
+})
+
+export const fetchUser = createAsyncThunk('session/fetchUser', async () => {
+    const resp = await getMe();
     return resp;
 })
 
@@ -33,17 +38,28 @@ const sessionSlice = createSlice({
         }
     },
     extraReducers: builder => {
+        builder.addCase(fetchUser.pending, (state, action) => {
+            state.status = 'authorizing'
+        })
+        builder.addCase(fetchUser.fulfilled, (state, action) => {
+            state.status = 'authorized';
+            state.session = action.payload;
+        })
+        builder.addCase(fetchUser.rejected, (state, action:any) => {
+            state.status = 'unauthorized';
+            state.error = action.payload.message;
+        })
+
         builder.addCase(registerUser.pending, (state, action) => {
             state.status = 'authorizing'
         })
         builder.addCase(registerUser.fulfilled, (state, action) => {
             state.status = 'authorized';
-            state.session = action.payload;
-            console.log(action.payload);
+            state.session = action.payload.data;
         })
         builder.addCase(registerUser.rejected, (state, action:any) => {
             state.status = 'unauthorized';
-            state.error = action.payload.error;
+            state.error = action.payload.message;
         })
         
         builder.addCase(loginUser.pending, (state, action) => {
@@ -51,12 +67,11 @@ const sessionSlice = createSlice({
         })
         builder.addCase(loginUser.fulfilled, (state, action) => {
             state.status = 'authorized';
-            state.session = action.payload;
-            console.log(action.payload);
+            state.session = action.payload.data;
         })
         builder.addCase(loginUser.rejected, (state, action:any) => {
             state.status = 'unauthorized';
-            state.error = action.payload.error;
+            state.error = action.payload.message;
         })
     }
 });

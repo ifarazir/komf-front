@@ -9,6 +9,8 @@ import { useState } from "react";
 
 import styles from "./card.module.css";
 
+import Axios from "axios";
+
 export default function LoginForm(props: RouteComponentProps) {
     const [error, setError] = useState("");
     const dispatch = useDispatch();
@@ -20,7 +22,13 @@ export default function LoginForm(props: RouteComponentProps) {
     });
 
     const handleSubmit = (data: any) => {
-        dispatch(loginUser(data));
+        Axios.get("https://api.komf.ir/sanctum/csrf-cookie")
+            .then((d) => {
+                Axios.post("/login", { email: data.email, password: data.password })
+                    .then((d) => console.log(d))
+                    .catch((e) => console.log(e));
+            })
+            .catch((e) => console.log(e));
     };
 
     return sessions ? (

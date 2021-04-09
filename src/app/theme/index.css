@@ -1,4 +1,6 @@
 :root {
     --main-color: #3498db;
-    --secondary-color: #ecf0f1
+    --secondary-color: #ecf0f1;
+    --main-dark: #34495e;
+    --main-yellow: #f1c40f;
 }

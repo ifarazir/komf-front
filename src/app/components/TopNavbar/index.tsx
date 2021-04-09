@@ -1,44 +1,54 @@
-import { Link } from "@reach/router";
-import {Navbar, Nav, Dropdown, NavDropdown} from "react-bootstrap";
+import { Link, useLocation } from "@reach/router";
+import { NavDropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
 import { logout, selectSession } from "../../features/session/sessionsSlice";
 
+import styles from "./TopNavBar.module.css";
+
 const AdminDropDown = () => {
     return (
-        <NavDropdown title='Admin' id='admin-dropdown'>
-            <NavDropdown.Item as={Link} to='users'>Users</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to='course'>Courses</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to='lesson'>Lessons</NavDropdown.Item>
+        <NavDropdown className={styles.dropdown} title="Admin" id="admin-dropdown">
+            <NavDropdown.Item as={Link} to="users">
+                Users
+            </NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="course">
+                Courses
+            </NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="lesson">
+                Lessons
+            </NavDropdown.Item>
         </NavDropdown>
     );
-}
+};
 
 export default function TopNavBar() {
     const session = useSelector(selectSession);
     const dispatch = useDispatch();
+    const location = useLocation();
 
     const handleLogout = () => {
         dispatch(logout());
     };
 
     return (
-        <Navbar>
-            <Nav>
-                <Nav.Link as={Link} to="/panel">
-                    Home
-                </Nav.Link>
-                {session && session.role && session.role === "admin" && (
-                    <AdminDropDown />
-                )}
-                <Nav.Link as={Link} to="/report">
-                    Report
-                </Nav.Link>
-                <Nav.Link as={Link} to="/exam">
-                    Exam
-                </Nav.Link>
-                <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
-            </Nav>
-        </Navbar>
+        <div className={styles.nav}>
+            <Link to="/panel" className={styles.navLink}>
+                <i className={"bi " + location.pathname !== "/panel" ? "bi-house-door-fill" : "bi-house-door"} />
+                Home
+            </Link>
+            <Link to="report" className={styles.navLink}>
+                <i className="bi bi-bar-chart" />
+                Report
+            </Link>
+            <Link to="/exam" className={styles.navLink}>
+                <i className="bi bi-book" />
+                Exam
+            </Link>
+            {session && session.role && session.role === "admin" && <AdminDropDown />}
+            <a href="#" className={styles.navLink} onClick={handleLogout}>
+                Logout
+            </a>
+        </div>
     );
 }

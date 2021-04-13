@@ -21,14 +21,19 @@ export default function LoginForm(props: RouteComponentProps) {
         password: Yup.string().required().min(4),
     });
 
+    const config = {
+        headers: { Authorization: `Bearer 2|uJsb9rMHQLYs82V8yfwg5e2b1hJUw6Si57hrHv0f` }
+    };
+
     const handleSubmit = (data: any) => {
-        Axios.get("https://api.komf.ir/sanctum/csrf-cookie")
-            .then((d) => {
-                Axios.post("/login", { email: data.email, password: data.password })
-                    .then((d) => console.log(d))
-                    .catch((e) => console.log(e));
-            })
-            .catch((e) => console.log(e));
+        Axios.post('https://api.komf.ir/api/login', {
+            email: data.username,
+            password: data.password
+        }).then(response => {
+            Axios.get('https://api.komf.ir/api/courses', config).then(responsee => {
+                console.log(responsee);
+            });
+        });
     };
 
     return sessions ? (

@@ -8,15 +8,17 @@ import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import Landing from "./pages/Landing";
 import Exam from "./pages/Exam";
+import UserDashboard from "./pages/UserDashboard";
+import Course from "./pages/Course";
 
 import LoginForm from "./features/session/LoginForm";
 import SignupForm from "./features/session/SignupForm";
 
 import { selectSession } from "./features/session/sessionsSlice";
-import UserDashboard from "./pages/UserDashboard";
 
 export default function MainRouter() {
     const session = useSelector(selectSession);
+    const isAdmin = session && session.role === "admin";
 
     return (
         <Router>
@@ -25,8 +27,9 @@ export default function MainRouter() {
             <Exam path="exam" />
 
             <Home path="panel">
-                {session && session.role === "admin" && <Admin path="/" />}
-                {session && session.role === "guest" && <UserDashboard path="/" />}
+                {isAdmin && <Admin path="/" />}
+                {isAdmin && <UserDashboard path="/" />}
+                {isAdmin && <Course path="course" />}
             </Home>
 
             <Auth path="/auth">

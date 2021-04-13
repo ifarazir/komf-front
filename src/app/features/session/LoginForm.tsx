@@ -9,31 +9,18 @@ import { useState } from "react";
 
 import styles from "./card.module.css";
 
-import Axios from "axios";
-
 export default function LoginForm(props: RouteComponentProps) {
     const [error, setError] = useState("");
     const dispatch = useDispatch();
     const sessions = useSelector(selectSession);
 
     const schema = Yup.object().shape({
-        username: Yup.string().required(),
+        email: Yup.string().required().email(),
         password: Yup.string().required().min(4),
     });
 
-    const config = {
-        headers: { Authorization: `Bearer 2|uJsb9rMHQLYs82V8yfwg5e2b1hJUw6Si57hrHv0f` },
-    };
-
-    const handleSubmit = (data: any) => {
-        Axios.post("https://api.komf.ir/api/login", {
-            email: data.username,
-            password: data.password,
-        }).then((response) => {
-            Axios.get("https://api.komf.ir/api/courses", config).then((responsee) => {
-                console.log(responsee);
-            });
-        });
+    const handleSubmit = (data: { email: string; password: string }) => {
+        dispatch(loginUser(data));
     };
 
     return sessions ? (
@@ -41,23 +28,23 @@ export default function LoginForm(props: RouteComponentProps) {
     ) : (
         <Card className={"shadow-lg " + styles.card}>
             <Card.Body>
-                <Formik initialValues={{ username: "", password: "" }} onSubmit={handleSubmit} validationSchema={schema}>
+                <Formik initialValues={{ email: "", password: "" }} onSubmit={handleSubmit} validationSchema={schema}>
                     {({ values, handleChange, handleBlur, errors }) => (
                         <Form className="d-flex flex-column justify-content-between">
                             <div className="text-center mb-4">
                                 <h3>Login Account</h3>
-                                <span className="text-muted">Enter your username and password</span>
+                                <span className="text-muted">Enter your email and password</span>
                             </div>
                             <div className="d-flex flex-column">
                                 <FormControl
-                                    name="username"
+                                    name="email"
                                     onChange={handleChange}
                                     onBlur={handleBlur}
-                                    value={values.username}
-                                    placeholder="Username"
+                                    value={values.email}
+                                    placeholder="Email"
                                     className="my-2"
                                 />
-                                {errors.username && <span className="text-muted">{errors.username}</span>}
+                                {errors.email && <span className="text-muted">{errors.email}</span>}
                                 <FormControl
                                     name="password"
                                     onChange={handleChange}

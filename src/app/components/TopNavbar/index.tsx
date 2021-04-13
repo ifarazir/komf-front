@@ -42,7 +42,7 @@ export default function TopNavBar() {
                 Report
             </Link>
             <Link to="/exam" className={styles.navLink}>
-                <i className="bi bi-book" />
+                <i className="bi bi-pencil" />
                 Exam
             </Link>
             {session && session.role && session.role === "admin" && <AdminDropDown />}

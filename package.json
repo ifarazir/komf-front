@@ -2,7 +2,6 @@
   "name": "komf",
   "version": "0.1.0",
   "private": true,
-  "proxy":"http://api.komf.ir/",
   "dependencies": {
     "@reach/router": "^1.3.4",
     "@reduxjs/toolkit": "^1.5.0",

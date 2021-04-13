@@ -9,6 +9,8 @@ import { useState } from "react";
 
 import styles from "./card.module.css";
 
+import Axios from "axios";
+
 export default function LoginForm(props: RouteComponentProps) {
     const [error, setError] = useState("");
     const dispatch = useDispatch();
@@ -19,8 +21,19 @@ export default function LoginForm(props: RouteComponentProps) {
         password: Yup.string().required().min(4),
     });
 
+    const config = {
+        headers: { Authorization: `Bearer 2|uJsb9rMHQLYs82V8yfwg5e2b1hJUw6Si57hrHv0f` },
+    };
+
     const handleSubmit = (data: any) => {
-        dispatch(loginUser(data));
+        Axios.post("https://api.komf.ir/api/login", {
+            email: data.username,
+            password: data.password,
+        }).then((response) => {
+            Axios.get("https://api.komf.ir/api/courses", config).then((responsee) => {
+                console.log(responsee);
+            });
+        });
     };
 
     return sessions ? (

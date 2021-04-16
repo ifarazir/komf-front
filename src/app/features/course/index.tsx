@@ -1,34 +1,25 @@
-import { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
+import { useState } from "react";
+import { Button, Spinner } from "react-bootstrap";
 import { courseType, deleteCourses, getCourses } from "../../logic/course";
 
 import Confirm from "../../components/Confirm";
 import CourseTable from "./Table";
 import CourseModal from "./Modals";
+import { useQuery } from "../../common/hooks";
 
 export default function CourseIndex() {
-    const [courses, setCourses] = useState([]);
+    const { data, error, loading, refreshData } = useQuery<courseType>(getCourses);
     const [selectedCourse, setSelectedCourse] = useState<courseType>();
 
     const [confirm, setConfirm] = useState(false);
     const [courseModal, setCourseModal] = useState(false);
 
-    const refreshCourses = async () => {
-        try {
-            const resp = await getCourses();
-            if (resp.status === "success") {
-                setCourses(resp.data);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
     const handleDelete = async () => {
         try {
             if (selectedCourse) {
                 const resp = await deleteCourses(selectedCourse.id);
                 if (resp.status === "success") {
-                    refreshCourses();
+                    refreshData();
                     setConfirm(false);
                 }
             }
@@ -37,9 +28,9 @@ export default function CourseIndex() {
         }
     };
 
-    useEffect(() => {
-        refreshCourses();
-    }, []);
+    if (loading) {
+        return <Spinner animation="border" />;
+    }
 
     return (
         <div>
@@ -54,7 +45,7 @@ export default function CourseIndex() {
                 show={courseModal}
                 handleClose={() => setCourseModal(false)}
                 selectedCourse={selectedCourse}
-                onDone={refreshCourses}
+                onDone={refreshData}
             />
 
             <div className="my-2">
@@ -68,7 +59,7 @@ export default function CourseIndex() {
                 </Button>
             </div>
             <CourseTable
-                courses={courses}
+                courses={data}
                 handleCourseDelete={(d) => {
                     setSelectedCourse(d);
                     setConfirm(true);

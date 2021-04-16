@@ -15,6 +15,7 @@ import LoginForm from "./features/session/LoginForm";
 import SignupForm from "./features/session/SignupForm";
 
 import { selectSession } from "./features/session/sessionsSlice";
+import Lesson from "./pages/Lesson";
 
 export default function MainRouter() {
     const session = useSelector(selectSession);
@@ -30,6 +31,7 @@ export default function MainRouter() {
                 {isAdmin && <Admin path="/" />}
                 {isAdmin && <UserDashboard path="/" />}
                 {isAdmin && <Course path="course" />}
+                {isAdmin && <Lesson path="lesson" />}
             </Home>
 
             <Auth path="/auth">

@@ -47,7 +47,7 @@ const sessionSlice = createSlice({
         });
         builder.addCase(fetchUser.rejected, (state, action: any) => {
             state.status = "unauthorized";
-            state.error = action.payload.message;
+            state.error = action.payload?.message;
         });
 
         builder.addCase(registerUser.pending, (state, action) => {

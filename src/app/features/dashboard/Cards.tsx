@@ -1,5 +1,5 @@
-import { Card } from "react-bootstrap";
 import { LineChart, Line, BarChart, Bar, ResponsiveContainer } from "recharts";
+import Card from "../../components/Card";
 import { useTheme } from "../../theme";
 
 const data = [
@@ -40,7 +40,7 @@ const SimpleLineChart = () => {
         <div style={{ height: 200 }}>
             <ResponsiveContainer width="100%" height="100%">
                 <LineChart width={300} height={200} data={data}>
-                    <Line type="monotone" dataKey="pv" stroke={theme.mainColor} strokeWidth={2} />
+                    <Line type="monotone" dataKey="pv" stroke="#fff" strokeWidth={4} />
                 </LineChart>
             </ResponsiveContainer>
         </div>
@@ -94,22 +94,16 @@ const SimpleBarChart = () => {
 
 export const UsersLineChartCard = () => {
     return (
-        <Card>
-            <Card.Body>
-                <Card.Header>Users</Card.Header>
-                <SimpleLineChart />
-            </Card.Body>
+        <Card title="Users" textColor="#fff" backgroundColor="#7868e6">
+            <SimpleLineChart />
         </Card>
     );
 };
 
 export const ExamsBarChartCard = () => {
     return (
-        <Card>
-            <Card.Body>
-                <Card.Header>Exams</Card.Header>
-                <SimpleBarChart />
-            </Card.Body>
+        <Card title="Exams">
+            <SimpleBarChart />
         </Card>
     );
 };

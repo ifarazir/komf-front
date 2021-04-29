@@ -3,7 +3,7 @@ import { Link, useLocation } from "@reach/router";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { logout, selectSession } from "../../features/session/sessionsSlice";
+import { logoutUser, selectSession } from "../../features/session/sessionsSlice";
 import styles from "./drawer.module.css";
 
 export default function Drawer() {
@@ -14,13 +14,13 @@ export default function Drawer() {
     const isAdmin = session && session.role && session.role === "admin";
 
     const handleLogout = () => {
-        dispatch(logout());
+        dispatch(logoutUser());
     };
 
     return (
         <div className={styles.drawerCont}>
             <Card className={styles.drawer}>
-                <div className="my-2 px-3">
+                <div className="my-4 px-3">
                     <h5>KOMF</h5>
                 </div>
                 <ul>
@@ -44,26 +44,29 @@ export default function Drawer() {
                     </li>
                     {isAdmin && (
                         <li>
-                            <i className="bi bi-pencil" />
-
-                            <Link to="course">Course</Link>
+                            <Link to="course">
+                                <i className="bi bi-pencil" />
+                                Course
+                            </Link>
                         </li>
                     )}
                     {isAdmin && (
                         <li>
-                            <i className="bi bi-pencil" />
-
-                            <Link to="lesson">Lesson</Link>
+                            <Link to="lesson">
+                                <i className="bi bi-pencil" />
+                                Lesson
+                            </Link>
                         </li>
                     )}
                     {isAdmin && (
                         <li>
-                            <i className="bi bi-pencil" />
-
-                            <Link to="vocab">Vocabs</Link>
+                            <Link to="vocab">
+                                <i className="bi bi-pencil" />
+                                Vocabs
+                            </Link>
                         </li>
                     )}
-                    <li style={{ flexGrow: 1 }} />
+                    <div style={{ flexGrow: 1 }} />
                     <li className="my-3">
                         <a href="#" className={styles.navLink} onClick={handleLogout}>
                             Logout

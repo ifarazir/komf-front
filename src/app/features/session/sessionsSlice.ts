@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { register, login, getMe } from "../../logic/auth";
+import { register, login, logout, getMe } from "../../logic/auth";
 
 export const registerUser = createAsyncThunk("session/register", async (data: any) => {
     const resp = await register(data);
@@ -12,6 +12,11 @@ export const loginUser = createAsyncThunk("session/login", async (data: { email:
     return resp;
 });
 
+export const logoutUser = createAsyncThunk("session/logout", async () => {
+    const resp = await logout();
+    return resp;
+});
+
 export const fetchUser = createAsyncThunk("session/fetchUser", async () => {
     const resp = await getMe();
     return resp;
@@ -19,7 +24,7 @@ export const fetchUser = createAsyncThunk("session/fetchUser", async () => {
 
 interface IInitial {
     session: any;
-    status: "authorized" | "unauthorized" | "authorizing" | "error";
+    status: "authorized" | "unauthorized" | "authorizing" | "error" | 'logging_out';
     error?: string;
 }
 
@@ -32,9 +37,6 @@ const sessionSlice = createSlice({
         setUser(state, action) {
             state.session = action.payload;
             state.status = "authorized";
-        },
-        logout(state) {
-            state.session = null;
         },
     },
     extraReducers: (builder) => {
@@ -78,6 +80,18 @@ const sessionSlice = createSlice({
             state.status = "unauthorized";
             state.error = action.payload.message;
         });
+
+        builder.addCase(logoutUser.pending, (state, action) => {
+            state.status = "logging_out";
+        });
+        builder.addCase(logoutUser.fulfilled, (state, action) => {
+            state.status = "unauthorized";
+            state.session = null;
+        });
+        builder.addCase(logoutUser.rejected, (state, action: any) => {
+            state.status = "error";
+            state.error = action.payload.message;
+        });
     },
 });
 
@@ -85,4 +99,4 @@ export default sessionSlice.reducer;
 
 export const selectSession = (state: any) => state.session.session;
 
-export const { setUser, logout } = sessionSlice.actions;
+export const { setUser } = sessionSlice.actions;

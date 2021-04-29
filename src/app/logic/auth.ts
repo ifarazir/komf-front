@@ -9,6 +9,10 @@ export type registerType = {
     password: string;
 };
 
+export const getSavedToken = () => {
+    return localStorage.getItem(TOKEN_STORAGE) ? localStorage.getItem(TOKEN_STORAGE) : null;
+} 
+
 export const getMe = async () => {
     try {
         const resp = await Axios.get('/user');
@@ -50,7 +54,10 @@ export const register = async (data: registerType) => {
 
 export const logout = async () => {
     try {
-        localStorage.removeItem(TOKEN_STORAGE);
+        const resp = await Axios.post('/logout');
+        if(resp.data.status === 'success'){
+            localStorage.removeItem(TOKEN_STORAGE);
+        }
     } catch (error) {
         throw error;
     }

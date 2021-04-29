@@ -1,23 +1,24 @@
 import { ReactNode } from "react";
 import { Redirect, RouteComponentProps } from "@reach/router";
-import { useSelector } from "react-redux";
+import { useMediaQuery } from "react-responsive";
 
 import Drawer from "../components/Drawer";
-import { selectSession } from "../features/session/sessionsSlice";
-import { useTheme } from "../theme";
+import TopNavBar from "../components/TopNavbar";
+
+import { getSavedToken } from "../logic/auth";
 
 interface IHome extends RouteComponentProps {
     children?: ReactNode;
 }
 
 export default function Home(props: IHome) {
-    const session = useSelector(selectSession);
-    const theme = useTheme();
+    const isLargeScreen = useMediaQuery({ query: "(min-width: 800px)" });
 
-    return session ? (
+    return getSavedToken() ? (
         <div>
-            <Drawer />
-            <div style={{ marginLeft: 290 }}>{props.children}</div>
+            {isLargeScreen && <Drawer />}
+            {!isLargeScreen && <TopNavBar />}
+            <div style={{ marginLeft: isLargeScreen ? 290 : 0, paddingTop: "1em" }}>{props.children}</div>
         </div>
     ) : (
         <Redirect noThrow to="/auth" />

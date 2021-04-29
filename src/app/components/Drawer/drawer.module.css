@@ -1,3 +1,9 @@
+@media (max-width: 760px) {
+    .drawerCont {
+        display: none;
+    }
+}
+
 .drawerCont {
     position: fixed;
     top: 25px;
@@ -22,13 +28,20 @@
 }
 
 .drawer ul li {
-    padding: 0.5em 1em;
+    display: flex;
 }
 
-.drawer a {
+.drawer li a {
+    display: flex;
+    flex-grow: 1;
+    padding: 0.5em 1em;
     color: white;
+}
+.drawer li a:hover {
+    background-color: #6b5ec6;
+    text-decoration: none;
 }
 
 .drawer li i {
-    margin: 0 1em;
+    margin-right: 1em;
 }

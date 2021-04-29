@@ -2,7 +2,7 @@ import { Link, useLocation } from "@reach/router";
 import { NavDropdown } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
-import { logout, selectSession } from "../../features/session/sessionsSlice";
+import { logoutUser, selectSession } from "../../features/session/sessionsSlice";
 
 import styles from "./TopNavBar.module.css";
 
@@ -28,7 +28,7 @@ export default function TopNavBar() {
     const location = useLocation();
 
     const handleLogout = () => {
-        dispatch(logout());
+        dispatch(logoutUser());
     };
 
     return (

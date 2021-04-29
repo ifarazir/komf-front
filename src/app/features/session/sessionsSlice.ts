@@ -66,8 +66,13 @@ const sessionSlice = createSlice({
             state.status = "authorizing";
         });
         builder.addCase(loginUser.fulfilled, (state, action) => {
-            state.status = "authorized";
-            state.session = action.payload.data;
+            if(action.payload.status === 'failed'){
+                state.status = "unauthorized";
+                state.error = action.payload.message;
+            } else {
+                state.status = "authorized";
+                state.session = action.payload.data;
+            }
         });
         builder.addCase(loginUser.rejected, (state, action: any) => {
             state.status = "unauthorized";

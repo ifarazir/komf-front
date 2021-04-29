@@ -85,7 +85,7 @@ const SimpleBarChart = () => {
         <div style={{ height: 200 }}>
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart width={150} height={40} data={data1}>
-                    <Bar dataKey="uv" fill={theme.mainYellow} />
+                    <Bar dataKey="uv" fill={theme.mainLight} />
                 </BarChart>
             </ResponsiveContainer>
         </div>

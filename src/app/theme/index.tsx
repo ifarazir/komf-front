@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 
-const defaultTheme = { mainColor: "#3498db", secondaryColor: "#ecf0f1", mainDark: "#34495e", mainYellow: "#f1c40f" };
+const defaultTheme = { mainColor: "#7868e6", secondaryColor: "#edeef7", mainDark: "#34495e", mainLight: "#b8b5ff" };
 
 const ThemeContext = createContext(defaultTheme);
 

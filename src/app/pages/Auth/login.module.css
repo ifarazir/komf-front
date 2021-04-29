@@ -4,6 +4,6 @@
 }
 .gradientBg {
     flex:1;
-    background: rgb(52,152,219);
-    background: linear-gradient(90deg, rgba(52,152,219,1) 0%, rgba(56,153,234,1) 100%);
+    background: var(--main-color);
+    background: linear-gradient(90deg, var(--main-color) 0%, var(--main-light) 100%);
 }

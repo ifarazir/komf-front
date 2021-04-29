@@ -1,17 +1,19 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Card, Button, FormControl } from "react-bootstrap";
 import { Link, Redirect, RouteComponentProps } from "@reach/router";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
+import { unwrapResult } from "@reduxjs/toolkit";
 
+import { useAppDispatch } from "../../store";
 import { selectSession, loginUser } from "./sessionsSlice";
-import { useState } from "react";
 
 import styles from "./card.module.css";
 
 export default function LoginForm(props: RouteComponentProps) {
     const [error, setError] = useState("");
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const sessions = useSelector(selectSession);
 
     const schema = Yup.object().shape({
@@ -19,8 +21,16 @@ export default function LoginForm(props: RouteComponentProps) {
         password: Yup.string().required().min(4),
     });
 
-    const handleSubmit = (data: { email: string; password: string }) => {
-        dispatch(loginUser(data));
+    const handleSubmit = async (data: { email: string; password: string }) => {
+        try {
+            const resp = await dispatch(loginUser(data));
+            unwrapResult(resp);
+            if (resp.payload.status === "failed") {
+                setError(resp.payload.message);
+            }
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     return sessions ? (
@@ -55,7 +65,7 @@ export default function LoginForm(props: RouteComponentProps) {
                                     className="mb-2"
                                 />
                                 {errors.password && <span className="text-muted">{errors.password}</span>}
-                                {error && <span className="text-muted">{error}</span>}
+                                {error && <span className="text-danger">{error}</span>}
                             </div>
                             <div className="mt-3 d-flex justify-content-between align-items-center">
                                 <Link to="/forgot" className="ml-1 text-muted">

@@ -10,12 +10,14 @@ import Landing from "./pages/Landing";
 import Exam from "./pages/Exam";
 import UserDashboard from "./pages/UserDashboard";
 import Course from "./pages/Course";
+import Lesson from "./pages/Lesson";
+import ExamAdmin from "./pages/ExamAdmin";
+import VocabAdmin from "./pages/VocabAdmin";
 
 import LoginForm from "./features/session/LoginForm";
 import SignupForm from "./features/session/SignupForm";
 
 import { selectSession } from "./features/session/sessionsSlice";
-import Lesson from "./pages/Lesson";
 
 export default function MainRouter() {
     const session = useSelector(selectSession);
@@ -25,13 +27,15 @@ export default function MainRouter() {
         <Router>
             <Error default />
             <Landing path="/" />
-            <Exam path="exam" />
+            <Exam path="exam/start" />
 
             <Home path="panel">
                 {isAdmin && <Admin path="/" />}
                 {isAdmin && <UserDashboard path="/" />}
                 {isAdmin && <Course path="course" />}
                 {isAdmin && <Lesson path="lesson" />}
+                {isAdmin && <ExamAdmin path="exam" />}
+                {isAdmin && <VocabAdmin path="vocab" />}
             </Home>
 
             <Auth path="/auth">

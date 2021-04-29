@@ -1,6 +1,15 @@
 :root {
-    --main-color: #3498db;
-    --secondary-color: #ecf0f1;
+    --main-color: #7868e6;
+    --secondary-color: #edeef7;
     --main-dark: #34495e;
-    --main-yellow: #f1c40f;
+    --main-light: #b8b5ff;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:focus {
+    background-color: var(--main-color) !important;
+    border-color: var(--main-light) !important;
+}
+
+.btn-primary:focus,  .btn-primary:active {
+    box-shadow: 0 0 0 .2rem var(--main-light);
 }

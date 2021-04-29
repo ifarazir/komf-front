@@ -2,9 +2,9 @@ import { ReactNode } from "react";
 import { Redirect, RouteComponentProps } from "@reach/router";
 import { useSelector } from "react-redux";
 
-import TopNavbar from "../components/TopNavbar";
+import Drawer from "../components/Drawer";
 import { selectSession } from "../features/session/sessionsSlice";
-import {useTheme} from "../theme";
+import { useTheme } from "../theme";
 
 interface IHome extends RouteComponentProps {
     children?: ReactNode;
@@ -15,11 +15,10 @@ export default function Home(props: IHome) {
     const theme = useTheme();
 
     return session ? (
-        <>
-            <TopNavbar />
-            <div style={{padding:2, backgroundColor:theme.mainColor}} />
-            {props.children}
-        </>
+        <div>
+            <Drawer />
+            <div style={{ marginLeft: 290 }}>{props.children}</div>
+        </div>
     ) : (
         <Redirect noThrow to="/auth" />
     );

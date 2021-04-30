@@ -9,14 +9,14 @@ import styles from "./TopNavBar.module.css";
 const AdminDropDown = () => {
     return (
         <NavDropdown className={styles.dropdown} title="Admin" id="admin-dropdown">
-            <NavDropdown.Item as={Link} to="users">
-                Users
-            </NavDropdown.Item>
             <NavDropdown.Item as={Link} to="course">
                 Courses
             </NavDropdown.Item>
             <NavDropdown.Item as={Link} to="lesson">
                 Lessons
+            </NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="vocab">
+                Vocabs
             </NavDropdown.Item>
         </NavDropdown>
     );
@@ -41,7 +41,7 @@ export default function TopNavBar() {
                 <i className="bi bi-bar-chart" />
                 Report
             </Link>
-            <Link to="/exam" className={styles.navLink}>
+            <Link to="exam" className={styles.navLink}>
                 <i className="bi bi-pencil" />
                 Exam
             </Link>

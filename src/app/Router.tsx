@@ -13,6 +13,7 @@ import Course from "./pages/Course";
 import Lesson from "./pages/Lesson";
 import ExamAdmin from "./pages/ExamAdmin";
 import VocabAdmin from "./pages/VocabAdmin";
+import Report from "./pages/Report";
 
 import LoginForm from "./features/session/LoginForm";
 import SignupForm from "./features/session/SignupForm";
@@ -36,6 +37,7 @@ export default function MainRouter() {
                 {isAdmin && <Lesson path="lesson" />}
                 {isAdmin && <ExamAdmin path="exam" />}
                 {isAdmin && <VocabAdmin path="vocab" />}
+                {isAdmin && <Report path="report" />}
             </Home>
 
             <Auth path="/auth">

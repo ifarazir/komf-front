@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
-import { IVocab, getVocabs, deleteVocab } from "../../logic/vocab";
+import { useQuery } from "react-query";
 
 import Confirm from "../../components/Confirm";
 import VocabTable from "./Table";
 import VocabModal from "./Modals";
-import { useQuery } from "../../common/hooks";
+import { IVocab, getVocabs, deleteVocab } from "../../logic/vocab";
 
 export default function VocabIndex() {
-    const { data, error, loading, refreshData } = useQuery<IVocab>(getVocabs);
+    const { data, isFetching, refetch } = useQuery("vocabs", getVocabs);
     const [selectedVocab, setSelectedVocab] = useState<IVocab>();
 
     const [confirm, setConfirm] = useState(false);
@@ -19,7 +19,7 @@ export default function VocabIndex() {
             if (selectedVocab) {
                 const resp = await deleteVocab(selectedVocab.id);
                 if (resp.status === "success") {
-                    refreshData();
+                    refetch();
                     setConfirm(false);
                 }
             }
@@ -28,7 +28,7 @@ export default function VocabIndex() {
         }
     };
 
-    if (loading) {
+    if (isFetching) {
         return <Spinner animation="border" />;
     }
 
@@ -41,9 +41,13 @@ export default function VocabIndex() {
                 text={`You are going to delete vocab ${selectedVocab?.word} forever`}
             />
 
-            <VocabModal show={vocabModal} handleClose={() => setVocabModal(false)} selectedVocab={selectedVocab} onDone={refreshData} />
+            <VocabModal show={vocabModal} handleClose={() => setVocabModal(false)} selectedVocab={selectedVocab} onDone={refetch} />
 
-            <div className="my-2">
+            <div className="my-2 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6>Vocab</h6>
+                    <span className="text-muted">Vocab managment panel</span>
+                </div>
                 <Button
                     onClick={() => {
                         setVocabModal(true);
@@ -54,7 +58,7 @@ export default function VocabIndex() {
                 </Button>
             </div>
             <VocabTable
-                vocabs={data}
+                vocabs={data.data}
                 handleVocabDelete={(d) => {
                     setSelectedVocab(d);
                     setConfirm(true);

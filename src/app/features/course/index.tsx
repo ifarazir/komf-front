@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
-import { courseType, deleteCourses, getCourses } from "../../logic/course";
+import { useQuery } from "react-query";
 
+import { courseType, deleteCourses, getCourses } from "../../logic/course";
 import Confirm from "../../components/Confirm";
 import CourseTable from "./Table";
 import CourseModal from "./Modals";
-import { useQuery } from "../../common/hooks";
+// import { useQuery } from "../../common/hooks";
 
 export default function CourseIndex() {
-    const { data, error, loading, refreshData } = useQuery<courseType>(getCourses);
+    const { data, isFetching, refetch } = useQuery("courses", getCourses);
     const [selectedCourse, setSelectedCourse] = useState<courseType>();
 
     const [confirm, setConfirm] = useState(false);
@@ -19,7 +20,7 @@ export default function CourseIndex() {
             if (selectedCourse) {
                 const resp = await deleteCourses(selectedCourse.id);
                 if (resp.status === "success") {
-                    refreshData();
+                    refetch();
                     setConfirm(false);
                 }
             }
@@ -28,7 +29,7 @@ export default function CourseIndex() {
         }
     };
 
-    if (loading) {
+    if (isFetching) {
         return <Spinner animation="border" />;
     }
 
@@ -41,14 +42,13 @@ export default function CourseIndex() {
                 text={`You are going to delete course ${selectedCourse?.title} forever`}
             />
 
-            <CourseModal
-                show={courseModal}
-                handleClose={() => setCourseModal(false)}
-                selectedCourse={selectedCourse}
-                onDone={refreshData}
-            />
+            <CourseModal show={courseModal} handleClose={() => setCourseModal(false)} selectedCourse={selectedCourse} onDone={refetch} />
 
-            <div className="my-2">
+            <div className="my-2 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6>Course</h6>
+                    <span className="text-muted">Course managment panel</span>
+                </div>
                 <Button
                     onClick={() => {
                         setCourseModal(true);
@@ -59,7 +59,7 @@ export default function CourseIndex() {
                 </Button>
             </div>
             <CourseTable
-                courses={data}
+                courses={data.data}
                 handleCourseDelete={(d) => {
                     setSelectedCourse(d);
                     setConfirm(true);

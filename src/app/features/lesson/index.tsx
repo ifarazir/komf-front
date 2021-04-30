@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
 
-import { useQuery } from "../../common/hooks";
+import { useQuery } from "react-query";
 
 import { deleteLessons, getLessons, lessonType } from "../../logic/lesson";
 
@@ -13,14 +13,14 @@ export default function LessonIndex() {
     const [lessonModal, setLessonModal] = useState(false);
     const [confirm, setConfirm] = useState(false);
     const [selLesson, setSelLesson] = useState<lessonType>();
-    const { data, error, loading, refreshData } = useQuery<lessonType>(getLessons);
+    const { data, isFetching, refetch } = useQuery("lessons", getLessons);
 
     const handleDelete = async () => {
         try {
             if (selLesson) {
                 const resp = await deleteLessons(selLesson.id);
                 if (resp.status === "success") {
-                    refreshData();
+                    refetch();
                     setConfirm(false);
                 }
             }
@@ -29,7 +29,7 @@ export default function LessonIndex() {
         }
     };
 
-    if (loading) {
+    if (isFetching) {
         return <Spinner animation="border" />;
     }
 
@@ -42,9 +42,13 @@ export default function LessonIndex() {
                 text={`You are going to delete lesson ${selLesson?.title} forever`}
             />
 
-            <LessonModal show={lessonModal} handleClose={() => setLessonModal(false)} onDone={refreshData} selectedLesson={selLesson} />
+            <LessonModal show={lessonModal} handleClose={() => setLessonModal(false)} onDone={refetch} selectedLesson={selLesson} />
 
-            <div className="my-2">
+            <div className="my-2 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6>Lessons</h6>
+                    <span className="text-muted">Lesson managment panel</span>
+                </div>
                 <Button
                     onClick={() => {
                         setSelLesson(undefined);
@@ -55,7 +59,7 @@ export default function LessonIndex() {
                 </Button>
             </div>
             <Table
-                lessons={data}
+                lessons={data.data}
                 onLessonSelected={(d) => {
                     setSelLesson(d);
                     setLessonModal(true);

@@ -18,6 +18,9 @@ const AdminDropDown = () => {
             <NavDropdown.Item as={Link} to="vocab">
                 Vocabs
             </NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="exam">
+                Exam
+            </NavDropdown.Item>
         </NavDropdown>
     );
 };
@@ -40,10 +43,6 @@ export default function TopNavBar() {
             <Link to="report" className={styles.navLink}>
                 <i className="bi bi-bar-chart" />
                 Report
-            </Link>
-            <Link to="exam" className={styles.navLink}>
-                <i className="bi bi-pencil" />
-                Exam
             </Link>
             {session && session.role && session.role === "admin" && <AdminDropDown />}
             <a href="#" className={styles.navLink} onClick={handleLogout}>

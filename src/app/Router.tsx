@@ -31,8 +31,9 @@ export default function MainRouter() {
             <Exam path="exam/start" />
 
             <Home path="panel">
+                {!isAdmin && <UserDashboard path="/" />}
+
                 {isAdmin && <Admin path="/" />}
-                {isAdmin && <UserDashboard path="/" />}
                 {isAdmin && <Course path="course" />}
                 {isAdmin && <Lesson path="lesson" />}
                 {isAdmin && <ExamAdmin path="exam" />}

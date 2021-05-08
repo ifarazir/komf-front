@@ -1,5 +1,14 @@
-import {RouteComponentProps} from "@reach/router";
+import { CardDeck, Container } from "react-bootstrap";
+import { RouteComponentProps } from "@reach/router";
 
-export default function UserDashboard(props:RouteComponentProps) {
-    return (<h1>User</h1>)
+import LatestCourse from "../features/course/LatestCourse";
+
+export default function UserPage(props: RouteComponentProps) {
+    return (
+        <Container fluid className="mt-2">
+            <CardDeck>
+                <LatestCourse />
+            </CardDeck>
+        </Container>
+    );
 }

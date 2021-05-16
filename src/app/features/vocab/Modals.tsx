@@ -44,7 +44,7 @@ export default function VocabModal({
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>{selectedVocab ? "Update course" : "Add new course"}</Modal.Title>
+                <Modal.Title>{selectedVocab ? "Update vocab" : "Add new vocab"}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Formik

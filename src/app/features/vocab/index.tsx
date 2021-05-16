@@ -8,7 +8,7 @@ import VocabModal from "./Modals";
 import { IVocab, getVocabs, deleteVocab } from "../../logic/vocab";
 
 export default function VocabIndex() {
-    const { data, isFetching, refetch } = useQuery("vocabs", getVocabs);
+    const { data, isLoading, refetch } = useQuery("vocabs", getVocabs);
     const [selectedVocab, setSelectedVocab] = useState<IVocab>();
 
     const [confirm, setConfirm] = useState(false);
@@ -28,7 +28,7 @@ export default function VocabIndex() {
         }
     };
 
-    if (isFetching) {
+    if (isLoading) {
         return <Spinner animation="border" />;
     }
 

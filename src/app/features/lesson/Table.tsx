@@ -3,6 +3,7 @@ import { lessonType } from "../../logic/lesson";
 
 import SearchForm from "../../components/Ribbons/SearchForm";
 import Card from "../../components/Card";
+import { Link } from "@reach/router";
 
 export default function LessonTable({
     lessons,
@@ -14,14 +15,14 @@ export default function LessonTable({
     onLessonSelected: (a: lessonType) => void;
 }) {
     return (
-        <div className="mt-4">
+        <div>
             <Card>
                 <SearchForm />
                 <Table responsive>
                     <thead>
                         <tr>
                             <th>Title</th>
-                            <th>Course</th>
+                            <th></th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -29,11 +30,14 @@ export default function LessonTable({
                     <tbody>
                         {lessons.map((l) => (
                             <tr key={l.id}>
-                                <td>{l.title}</td>
-                                <td>{l.course_id}</td>
                                 <td>
-                                    <Button variant="outline-warning" onClick={() => onLessonSelected(l)}>
-                                        <i className="bi bi-pencil" />
+                                    <Link to={`/panel/lesson/${l.id}`} state={l}>
+                                        {l.title}
+                                    </Link>
+                                </td>
+                                <td>
+                                    <Button title="Vocabs" variant="outline-success" onClick={() => onLessonSelected(l)}>
+                                        <i className="bi bi-book" />
                                     </Button>
                                 </td>
                                 <td>

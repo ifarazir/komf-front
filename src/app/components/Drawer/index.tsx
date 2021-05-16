@@ -20,14 +20,20 @@ export default function Drawer() {
     return (
         <div className={styles.drawerCont}>
             <Card className={styles.drawer}>
-                <div className="my-4 px-3">
-                    <h5>KOMF</h5>
+                <div className="d-flex aling-items-center my-4 px-3">
+                    <h5>{`KOMF | ${session?.fname} - ${session?.role}`}</h5>
                 </div>
                 <ul>
                     <li>
                         <Link to="/panel" className={location.pathname === "/panel" ? styles.active : ""}>
                             <i className={"bi bi-house-door"} />
                             Home
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="profile" className={location.pathname === "/panel/profile" ? styles.active : ""}>
+                            <i className={"bi bi-person"} />
+                            Profile
                         </Link>
                     </li>
                     <li>
@@ -39,7 +45,7 @@ export default function Drawer() {
                     {isAdmin && (
                         <li>
                             <Link to="exam" className={location.pathname === "/panel/exam" ? styles.active : ""}>
-                                <i className="bi bi-pencil" />
+                                <i className="bi bi-journal" />
                                 Exam
                             </Link>
                         </li>
@@ -49,22 +55,6 @@ export default function Drawer() {
                             <Link to="course" className={location.pathname === "/panel/course" ? styles.active : ""}>
                                 <i className="bi bi-pencil" />
                                 Course
-                            </Link>
-                        </li>
-                    )}
-                    {isAdmin && (
-                        <li>
-                            <Link to="lesson" className={location.pathname === "/panel/lesson" ? styles.active : ""}>
-                                <i className="bi bi-pencil" />
-                                Lesson
-                            </Link>
-                        </li>
-                    )}
-                    {isAdmin && (
-                        <li>
-                            <Link to="vocab" className={location.pathname === "/panel/vocab" ? styles.active : ""}>
-                                <i className="bi bi-pencil" />
-                                Vocabs
                             </Link>
                         </li>
                     )}

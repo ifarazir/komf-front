@@ -22,6 +22,15 @@ export const getCourses = async () => {
     }
 };
 
+export const getCourseLessons = async (courseId:string | number) => {
+    try {
+        const resp = await Axios.get(`/courses/${courseId}/lessons`);
+        return resp.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const createCourse = async (data: courseRequest) => {
     try {
         const resp = await Axios.post("/admin/courses", data);

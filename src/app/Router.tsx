@@ -19,6 +19,9 @@ import LoginForm from "./features/session/LoginForm";
 import SignupForm from "./features/session/SignupForm";
 
 import { selectSession } from "./features/session/sessionsSlice";
+import AdminCourseDetail from "./pages/AdminCourseDetail";
+import AdminLessonDetail from "./pages/AdminLessonDetail";
+import ProfilePage from "./pages/Profile";
 
 export default function MainRouter() {
     const session = useSelector(selectSession);
@@ -31,11 +34,14 @@ export default function MainRouter() {
             <Exam path="exam/start" />
 
             <Home path="panel">
+                <ProfilePage path="/profile" />
                 {!isAdmin && <UserDashboard path="/" />}
 
                 {isAdmin && <Admin path="/" />}
                 {isAdmin && <Course path="course" />}
+                {isAdmin && <AdminCourseDetail path="course/:courseId" />}
                 {isAdmin && <Lesson path="lesson" />}
+                {isAdmin && <AdminLessonDetail path="lesson/:lessonId" />}
                 {isAdmin && <ExamAdmin path="exam" />}
                 {isAdmin && <VocabAdmin path="vocab" />}
                 {isAdmin && <Report path="report" />}

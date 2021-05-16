@@ -20,6 +20,15 @@ export const getLessons = async () => {
     }
 };
 
+export const getLessonVobacs = async (lessonId:string | number) => {
+    try {
+        const resp = await Axios.get(`/lessons/${lessonId}/vocabs`);
+        return resp.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
 export const createLesson = async (data: lessonRequest) => {
     try {
         const resp = await Axios.post("/admin/lessons", data);

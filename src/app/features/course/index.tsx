@@ -9,7 +9,7 @@ import CourseModal from "./Modals";
 // import { useQuery } from "../../common/hooks";
 
 export default function CourseIndex() {
-    const { data, isFetching, refetch } = useQuery("courses", getCourses);
+    const { data, isLoading, refetch } = useQuery("courses", getCourses);
     const [selectedCourse, setSelectedCourse] = useState<courseType>();
 
     const [confirm, setConfirm] = useState(false);
@@ -29,7 +29,7 @@ export default function CourseIndex() {
         }
     };
 
-    if (isFetching) {
+    if (isLoading) {
         return <Spinner animation="border" />;
     }
 

@@ -13,7 +13,7 @@ export default function LessonIndex() {
     const [lessonModal, setLessonModal] = useState(false);
     const [confirm, setConfirm] = useState(false);
     const [selLesson, setSelLesson] = useState<lessonType>();
-    const { data, isFetching, refetch } = useQuery("lessons", getLessons);
+    const { data, isLoading, refetch } = useQuery("lessons", getLessons);
 
     const handleDelete = async () => {
         try {
@@ -29,7 +29,7 @@ export default function LessonIndex() {
         }
     };
 
-    if (isFetching) {
+    if (isLoading) {
         return <Spinner animation="border" />;
     }
 

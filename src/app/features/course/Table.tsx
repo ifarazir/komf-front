@@ -1,8 +1,9 @@
-import { Button, Table, Form } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { courseType } from "../../logic/course";
 
 import Card from "../../components/Card";
 import SearchForm from "../../components/Ribbons/SearchForm";
+import { Link } from "@reach/router";
 
 export default function CourseTable({
     courses,
@@ -30,7 +31,11 @@ export default function CourseTable({
                     <tbody>
                         {courses.map((c: courseType) => (
                             <tr key={c.id}>
-                                <td>{c.title}</td>
+                                <td>
+                                    <Link to={`${c.id}`} state={c}>
+                                        {c.title}
+                                    </Link>
+                                </td>
                                 <td>{c.description}</td>
                                 <td>{c.price}</td>
                                 <td>

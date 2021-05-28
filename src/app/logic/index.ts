@@ -13,6 +13,8 @@ Axios.interceptors.request.use((config) => {
     return config;
 });
 
+// const NodeAxios = Axios.create({baseURL:''})
+
 export const fetcher = async (url: string) => {
     try {
         const resp = await Axios.get(url);

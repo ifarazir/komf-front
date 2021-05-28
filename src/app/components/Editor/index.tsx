@@ -1,6 +1,14 @@
 import { Editor } from "@tinymce/tinymce-react";
 
-export default function TinyEditor({ handleChange, height }: { handleChange: (val: string) => void; height?: number }) {
+export default function TinyEditor({
+    handleChange,
+    height,
+    initialValue,
+}: {
+    handleChange: (val: string) => void;
+    height?: number;
+    initialValue?: string;
+}) {
     const handleEditorChange = (e: any) => {
         // console.log("Content was updated:", e.target.getContent());
         handleChange(e.target.getContent());
@@ -9,7 +17,7 @@ export default function TinyEditor({ handleChange, height }: { handleChange: (va
     return (
         <Editor
             apiKey="2qg5sl58q16in9tr36a90vjugtsajkt4gmb40nvvewo64q7j"
-            initialValue="<p>Initial content</p>"
+            initialValue={initialValue ? initialValue : "<p>Initial content</p>"}
             init={{
                 height: height ? height : 450,
                 menubar: false,

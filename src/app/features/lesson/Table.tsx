@@ -1,4 +1,4 @@
-import { Button, Table } from "react-bootstrap";
+import { Button, Form, Table } from "react-bootstrap";
 import { lessonType } from "../../logic/lesson";
 
 import SearchForm from "../../components/Ribbons/SearchForm";
@@ -8,21 +8,28 @@ import { Link } from "@reach/router";
 export default function LessonTable({
     lessons,
     onLessonSelected,
+    handleAddNewLesson,
     handleLessonDelete,
 }: {
     lessons: lessonType[];
     handleLessonDelete: (a: lessonType) => void;
+    handleAddNewLesson: () => void;
     onLessonSelected: (a: lessonType) => void;
 }) {
     return (
         <div>
             <Card>
-                <SearchForm />
+                <Form inline>
+                    <Form.Control className="mb-2 mr-sm-2" name="search" placeholder="Search for..." />
+                    <Button className="mb-2">Search</Button>
+                    <Button className="mb-2 ml-auto" onClick={handleAddNewLesson}>
+                        +
+                    </Button>
+                </Form>
                 <Table responsive>
                     <thead>
                         <tr>
                             <th>Title</th>
-                            <th></th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -36,8 +43,8 @@ export default function LessonTable({
                                     </Link>
                                 </td>
                                 <td>
-                                    <Button title="Vocabs" variant="outline-success" onClick={() => onLessonSelected(l)}>
-                                        <i className="bi bi-book" />
+                                    <Button title="Vocabs" variant="outline-warning" onClick={() => onLessonSelected(l)}>
+                                        <i className="bi bi-pencil" />
                                     </Button>
                                 </td>
                                 <td>

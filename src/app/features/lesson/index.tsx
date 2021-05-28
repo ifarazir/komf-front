@@ -1,26 +1,26 @@
 import { useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
+import useSWR from "swr";
 
-import { useQuery } from "react-query";
-
-import { deleteLessons, getLessons, lessonType } from "../../logic/lesson";
+import { deleteLesson, lessonType } from "../../logic/lesson";
 
 import Confirm from "../../components/Confirm";
 import Table from "./Table";
 import LessonModal from "./Modals";
+import { fetcher } from "../../logic";
 
 export default function LessonIndex() {
     const [lessonModal, setLessonModal] = useState(false);
     const [confirm, setConfirm] = useState(false);
     const [selLesson, setSelLesson] = useState<lessonType>();
-    const { data, isLoading, refetch } = useQuery("lessons", getLessons);
+    const { data, revalidate } = useSWR("/api/lessons", fetcher);
 
     const handleDelete = async () => {
         try {
             if (selLesson) {
-                const resp = await deleteLessons(selLesson.id);
+                const resp = await deleteLesson(selLesson.id);
                 if (resp.status === "success") {
-                    refetch();
+                    revalidate();
                     setConfirm(false);
                 }
             }
@@ -29,7 +29,7 @@ export default function LessonIndex() {
         }
     };
 
-    if (isLoading) {
+    if (!data) {
         return <Spinner animation="border" />;
     }
 
@@ -42,7 +42,7 @@ export default function LessonIndex() {
                 text={`You are going to delete lesson ${selLesson?.title} forever`}
             />
 
-            <LessonModal show={lessonModal} handleClose={() => setLessonModal(false)} onDone={refetch} selectedLesson={selLesson} />
+            <LessonModal show={lessonModal} handleClose={() => setLessonModal(false)} selectedLesson={selLesson} />
 
             <div className="my-2 d-flex justify-content-between align-items-center">
                 <div>
@@ -59,6 +59,7 @@ export default function LessonIndex() {
                 </Button>
             </div>
             <Table
+                handleAddNewLesson={() => {}}
                 lessons={data.data}
                 onLessonSelected={(d) => {
                     setSelLesson(d);

@@ -1,22 +1,29 @@
-import { Button, Table } from "react-bootstrap";
+import { Button, Form, Table } from "react-bootstrap";
 import { IVocab } from "../../logic/vocab";
 
 import Card from "../../components/Card";
-import SearchForm from "../../components/Ribbons/SearchForm";
 
 export default function VocabsTable({
     vocabs,
     onVocabSelected,
     handleVocabDelete,
+    handleAddNewVocab,
 }: {
     vocabs: IVocab[];
-    handleVocabDelete: (a: IVocab) => void;
     onVocabSelected: (a: IVocab) => void;
+    handleVocabDelete: (a: IVocab) => void;
+    handleAddNewVocab: () => void;
 }) {
     return (
         <div className="mt-4">
             <Card>
-                <SearchForm />
+                <Form inline>
+                    <Form.Control className="mb-2 mr-sm-2" name="search" placeholder="Search for..." />
+                    <Button className="mb-2">Search</Button>
+                    <Button className="mb-2 ml-auto" onClick={handleAddNewVocab}>
+                        +
+                    </Button>
+                </Form>
                 <Table responsive>
                     <thead>
                         <tr>

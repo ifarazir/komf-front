@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
-import { useQuery } from "react-query";
+import useSWR from "swr";
 
 import Confirm from "../../components/Confirm";
 import VocabTable from "./Table";
 import VocabModal from "./Modals";
 import { IVocab, getVocabs, deleteVocab } from "../../logic/vocab";
+import { fetcher } from "../../logic";
 
 export default function VocabIndex() {
-    const { data, isLoading, refetch } = useQuery("vocabs", getVocabs);
+    const { data, revalidate } = useSWR("/api/vocabs", fetcher);
     const [selectedVocab, setSelectedVocab] = useState<IVocab>();
 
     const [confirm, setConfirm] = useState(false);
@@ -19,7 +20,7 @@ export default function VocabIndex() {
             if (selectedVocab) {
                 const resp = await deleteVocab(selectedVocab.id);
                 if (resp.status === "success") {
-                    refetch();
+                    revalidate();
                     setConfirm(false);
                 }
             }
@@ -28,7 +29,7 @@ export default function VocabIndex() {
         }
     };
 
-    if (isLoading) {
+    if (!data) {
         return <Spinner animation="border" />;
     }
 
@@ -41,7 +42,7 @@ export default function VocabIndex() {
                 text={`You are going to delete vocab ${selectedVocab?.word} forever`}
             />
 
-            <VocabModal show={vocabModal} handleClose={() => setVocabModal(false)} selectedVocab={selectedVocab} onDone={refetch} />
+            <VocabModal show={vocabModal} handleClose={() => setVocabModal(false)} selectedVocab={selectedVocab} onDone={revalidate} />
 
             <div className="my-2 d-flex justify-content-between align-items-center">
                 <div>
@@ -59,6 +60,10 @@ export default function VocabIndex() {
             </div>
             <VocabTable
                 vocabs={data.data}
+                handleAddNewVocab={() => {
+                    setSelectedVocab(undefined);
+                    setVocabModal(true);
+                }}
                 handleVocabDelete={(d) => {
                     setSelectedVocab(d);
                     setConfirm(true);

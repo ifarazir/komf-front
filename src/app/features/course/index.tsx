@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Button, Spinner } from "react-bootstrap";
-import { useQuery } from "react-query";
+import useSWR from "swr";
 
-import { courseType, deleteCourses, getCourses } from "../../logic/course";
+import { courseType, deleteCourses } from "../../logic/course";
 import Confirm from "../../components/Confirm";
 import CourseTable from "./Table";
 import CourseModal from "./Modals";
-// import { useQuery } from "../../common/hooks";
+import { fetcher } from "../../logic";
 
 export default function CourseIndex() {
-    const { data, isLoading, refetch } = useQuery("courses", getCourses);
+    const { data, revalidate } = useSWR("/courses", fetcher);
     const [selectedCourse, setSelectedCourse] = useState<courseType>();
 
     const [confirm, setConfirm] = useState(false);
@@ -20,7 +20,7 @@ export default function CourseIndex() {
             if (selectedCourse) {
                 const resp = await deleteCourses(selectedCourse.id);
                 if (resp.status === "success") {
-                    refetch();
+                    revalidate();
                     setConfirm(false);
                 }
             }
@@ -29,7 +29,7 @@ export default function CourseIndex() {
         }
     };
 
-    if (isLoading) {
+    if (!data) {
         return <Spinner animation="border" />;
     }
 
@@ -42,7 +42,7 @@ export default function CourseIndex() {
                 text={`You are going to delete course ${selectedCourse?.title} forever`}
             />
 
-            <CourseModal show={courseModal} handleClose={() => setCourseModal(false)} selectedCourse={selectedCourse} onDone={refetch} />
+            <CourseModal show={courseModal} handleClose={() => setCourseModal(false)} selectedCourse={selectedCourse} onDone={revalidate} />
 
             <div className="my-2 d-flex justify-content-between align-items-center">
                 <div>

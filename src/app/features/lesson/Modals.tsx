@@ -1,10 +1,10 @@
 import { FormControl, Modal, Button, FormGroup, FormLabel } from "react-bootstrap";
+import useSWR, { mutate } from "swr";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 import { createLesson, lessonRequest, lessonType, updateLesson } from "../../logic/lesson";
-import { useQuery } from "../../common/hooks";
-import { courseType, getCourses } from "../../logic/course";
+import { fetcher } from "../../logic";
 
 export default function LessonModal({
     show,
@@ -15,10 +15,10 @@ export default function LessonModal({
     show: boolean;
     selectedLesson?: lessonType;
     handleClose: () => void;
-    onDone: () => void;
+    onDone?: () => void;
 }) {
-    const { data } = useQuery<courseType>(getCourses);
-    const courses = data;
+    const { data } = useSWR("/courses", fetcher);
+    const courses = data?.data;
 
     const schema = Yup.object().shape({
         title: Yup.string().required(),
@@ -29,12 +29,16 @@ export default function LessonModal({
         try {
             if (selectedLesson && selectedLesson.id) {
                 const resp = await updateLesson(selectedLesson.id, data);
-                onDone();
+                mutate("/lessons");
+                onDone && onDone();
+
                 handleClose();
             } else {
                 const resp = await createLesson(data);
                 if (resp.status === "success") {
-                    onDone();
+                    mutate("/lessons");
+                    onDone && onDone();
+
                     handleClose();
                 }
             }
@@ -70,7 +74,7 @@ export default function LessonModal({
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                 >
-                                    {courses.map((c) => (
+                                    {courses.map((c: any) => (
                                         <option value={c.id}>{c.title}</option>
                                     ))}
                                 </FormControl>

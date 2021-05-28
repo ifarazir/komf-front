@@ -47,7 +47,7 @@ export const updateLesson = async (id: number, data: lessonRequest) => {
     }
 };
 
-export const deleteLessons = async (id: number) => {
+export const deleteLesson = async (id: number) => {
     try {
         const resp = await Axios.delete(`/admin/lessons/${id}`);
         return resp.data;

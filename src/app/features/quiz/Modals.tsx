@@ -64,8 +64,11 @@ export default function QuizQuestionModal({
                             <div className="d-flex">
                                 <FormGroup>
                                     <FormLabel>Title:</FormLabel>
-                                    {/* <FormControl name="title" value={values.title} onChange={handleChange} onBlur={handleBlur} /> */}
-                                    <TinyEditor handleChange={(v) => setFieldValue("title", v)} height={460} />
+                                    <TinyEditor
+                                        handleChange={(v) => setFieldValue("title", v)}
+                                        initialValue={selectedQuestion?.title}
+                                        height={460}
+                                    />
                                 </FormGroup>
                                 <div className="ml-2">
                                     <FormGroup>

@@ -1,14 +1,15 @@
 import { Button, Spinner } from "react-bootstrap";
-import { useQuery } from "react-query";
+import useSWR from "swr";
 
 import { getCourses } from "../../logic/course";
 import MyCard from "../../components/Card";
+import { fetcher } from "../../logic";
 
 export default function LatestCourse() {
-    const { data, isLoading } = useQuery("courses", getCourses);
+    const { data, error } = useSWR("/api/courses", fetcher);
 
     let content;
-    if (isLoading) {
+    if (!data) {
         content = <Spinner animation="border" />;
     } else {
         content = (

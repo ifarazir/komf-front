@@ -1,22 +1,29 @@
-import { Button, Table } from "react-bootstrap";
+import { Button, Form, Table } from "react-bootstrap";
 import { IQuizQuestion } from "../../logic/quiz";
 
-import SearchForm from "../../components/Ribbons/SearchForm";
 import Card from "../../components/Card";
 
-export default function LessonTable({
+export default function QuizQuestionsTable({
     questions,
     onQuestionSelected,
     handleQuestionDelete,
+    handleAddNewQuestion,
 }: {
     questions: IQuizQuestion[];
     onQuestionSelected: (a: IQuizQuestion) => void;
     handleQuestionDelete: (a: IQuizQuestion) => void;
+    handleAddNewQuestion: () => void;
 }) {
     return (
         <div>
             <Card>
-                <SearchForm />
+                <Form inline>
+                    <Form.Control className="mb-2 mr-sm-2" name="search" placeholder="Search for..." />
+                    <Button className="mb-2">Search</Button>
+                    <Button className="mb-2 ml-auto" onClick={handleAddNewQuestion}>
+                        +
+                    </Button>
+                </Form>
                 <Table responsive>
                     <thead>
                         <tr>

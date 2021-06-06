@@ -5,6 +5,15 @@
     --main-light: #b8b5ff;
 }
 
+@font-face {
+    font-family: IRANSansX-Medium;
+    src: url('../assets/font/IRANSansX-Medium.woff');
+}
+
+*{
+    font-family: IRANSansX-Medium, Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
 .btn-primary, .btn-primary:hover, .btn-primary:focus {
     background-color: var(--main-color) !important;
     border-color: var(--main-light) !important;

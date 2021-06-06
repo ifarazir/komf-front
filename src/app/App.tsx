@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { SWRConfig } from "swr";
 import { ThemeProvider } from "./theme";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -8,8 +10,8 @@ import "./theme/index.css";
 import Router from "./Router";
 
 import "./logic";
-import { useEffect } from "react";
 import { fetchUser } from "./features/session/sessionsSlice";
+import { fetcher } from "./logic";
 
 function App() {
     const dispatch = useDispatch();
@@ -19,9 +21,11 @@ function App() {
     }, []);
 
     return (
-        <ThemeProvider>
-            <Router />
-        </ThemeProvider>
+        <SWRConfig value={{ fetcher: fetcher }}>
+            <ThemeProvider>
+                <Router />
+            </ThemeProvider>
+        </SWRConfig>
     );
 }
 

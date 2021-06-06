@@ -1,61 +1,141 @@
 import React, { useState } from "react";
-import { FormControl, Button } from "react-bootstrap";
+import { FormControl, Button, FormGroup, FormLabel, Alert, FormText } from "react-bootstrap";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
-import { questionType } from "../../logic/question";
+import { createExamQuestion, questionType, sections } from "../../logic/question";
 import TinyEditor from "../../components/Editor";
+import { mutate } from "swr";
 
-export const QuestionBodyForm = ({ handleCancel, handleNext }: { handleCancel: () => void; handleNext: () => void }) => {
+export const QuestionBodyForm = ({ handleSubmit, examId, section }: { handleSubmit: () => void; section: sections; examId: string }) => {
+    const [error, setError] = useState<any>();
+
     return (
         <Formik
-            initialValues={{} as questionType}
-            onSubmit={(d) => {
-                handleNext();
-                console.log(d);
+            initialValues={{ part: "1" } as any}
+            onSubmit={async (d) => {
+                try {
+                    const resp = await createExamQuestion({
+                        examId,
+                        questionParentId: null,
+                        type: "body",
+                        content: d.content,
+                        questionNumber: null,
+                        section,
+                        part: d.part,
+                        options: null,
+                        answer: null,
+                    });
+                    if (resp && resp.status === 200) {
+                        handleSubmit();
+                        mutate(`/admin/questions?examId=${examId}&section=${section}`);
+                    }
+                } catch (error) {
+                    setError(error);
+                    console.log(error);
+                }
             }}
         >
-            {({ values, handleChange, handleBlur, errors }) => (
+            {({ values, handleChange, handleBlur, setFieldValue }) => (
                 <Form>
-                    <TinyEditor handleChange={() => {}} />
-                    <div className="d-flex">
-                        <Button className="mt-2" variant="secondary" onClick={handleCancel}>
-                            Cancel
-                        </Button>
-                        <div className="mr-auto" />
-                        <Button className="mt-2" type="submit" variant="success">
-                            Next
-                        </Button>
-                    </div>
+                    {error && (
+                        <Alert className="my-1" variant="danger">
+                            {error}
+                        </Alert>
+                    )}
+                    <FormGroup>
+                        <FormLabel>Part: </FormLabel>
+                        <FormControl as="select" name="part" onChange={handleChange} onBlur={handleBlur} value={values.part}>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </FormControl>
+                    </FormGroup>
+                    <FormGroup>
+                        <FormLabel>Content: </FormLabel>
+                        <TinyEditor handleChange={(v) => setFieldValue("content", v)} height={200} />
+                    </FormGroup>
+                    <Button className="mt-2" type="submit" variant="success">
+                        Submit
+                    </Button>
                 </Form>
             )}
         </Formik>
     );
 };
 
-export const SingleChoiceForm = () => {
+export const SingleChoiceForm = ({
+    examId,
+    section,
+    questionParentId,
+    handleSubmit,
+}: {
+    examId: string;
+    section: sections;
+    questionParentId: string;
+    handleSubmit: () => void;
+}) => {
+    const handleSubmitForm = async (d: any) => {
+        try {
+            const resp = await createExamQuestion({
+                examId,
+                questionParentId,
+                type: "singleChoice",
+                content: d.content,
+                questionNumber: d.questionNumber,
+                section: null,
+                part: null,
+                options: {
+                    A: d.A,
+                    B: d.B,
+                    C: d.C,
+                    D: d.D,
+                },
+                answer: [d.answer],
+            });
+            if (resp && resp.status === 200) {
+                handleSubmit();
+                mutate(`/admin/questions?examId=${examId}&section=${section}`);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
-        <Formik
-            initialValues={{} as questionType}
-            onSubmit={(d) => {
-                console.log(d);
-            }}
-        >
-            {({ values, handleChange, handleBlur, errors }) => (
+        <Formik initialValues={{ answer: "A" } as any} onSubmit={handleSubmitForm}>
+            {({ values, handleChange, handleBlur, setFieldValue }) => (
                 <Form className="my-2">
-                    <TinyEditor height={150} handleChange={() => {}} />
-                    <FormControl className="mt-2" as="select">
-                        {["A", "B", "C", "D"].map((choice) => (
-                            <option key={choice} value={choice}>
-                                {choice}
-                            </option>
-                        ))}
-                    </FormControl>
+                    <FormGroup>
+                        <FormLabel>Content: </FormLabel>
+                        <TinyEditor height={150} handleChange={(v) => setFieldValue("content", v)} />
+                    </FormGroup>
+                    <FormGroup>
+                        <FormLabel>Question number: </FormLabel>
+                        <FormControl name="questionNumber" value={values.questionNumber} onChange={handleChange} onBlur={handleBlur} />
+                    </FormGroup>
+                    <FormGroup>
+                        <FormLabel>Answer: </FormLabel>
+                        <FormControl
+                            className="mt-2"
+                            as="select"
+                            name="answer"
+                            value={values.answer}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        >
+                            {["A", "B", "C", "D"].map((choice) => (
+                                <option key={choice} value={choice}>
+                                    {choice}
+                                </option>
+                            ))}
+                        </FormControl>
+                    </FormGroup>
                     <div className="my-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1em" }}>
-                        <FormControl placeholder="Option 1" />
-                        <FormControl placeholder="Option 2" />
-                        <FormControl placeholder="Option 3" />
-                        <FormControl placeholder="Option 4" />
+                        <FormControl name="A" value={values.options?.A} onChange={handleChange} onBlur={handleBlur} placeholder="A" />
+                        <FormControl name="B" value={values.options?.B} onChange={handleChange} onBlur={handleBlur} placeholder="B" />
+                        <FormControl name="C" value={values.options?.C} onChange={handleChange} onBlur={handleBlur} placeholder="C" />
+                        <FormControl name="D" value={values.options?.D} onChange={handleChange} onBlur={handleBlur} placeholder="D" />
                     </div>
                     <Button className="mt-2" type="submit" variant="success">
                         Save
@@ -66,19 +146,148 @@ export const SingleChoiceForm = () => {
     );
 };
 
-export const SubQuestionForm = () => {
-    const [questionType, setQuestionType] = useState<"singleChoice" | "multiChoice" | "ordering">();
+export const MultiChoiceForm = ({
+    examId,
+    section,
+    questionParentId,
+    handleSubmit,
+}: {
+    examId: string;
+    section: sections;
+    questionParentId: string;
+    handleSubmit: () => void;
+}) => {
+    const handleSubmitForm = async (d: any) => {
+        try {
+            const resp = await createExamQuestion({
+                examId,
+                questionParentId,
+                type: "multiChoice",
+                content: d.content,
+                questionNumber: d.questionNumber,
+                section: null,
+                part: null,
+                options: {
+                    A: d.A,
+                    B: d.B,
+                    C: d.C,
+                    D: d.D,
+                    E: d.E,
+                },
+                answer: d.answer.split(",").map((c: string) => c.toUpperCase()),
+            });
+            if (resp && resp.status === 200) {
+                handleSubmit();
+                mutate(`/admin/questions?examId=${examId}&section=${section}`);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
-        <>
-            <div className="d-flex justify-content-between">
-                <Button onClick={() => setQuestionType("singleChoice")}>+ Single choice</Button>
-                <Button onClick={() => setQuestionType("multiChoice")}>+ Multi choice</Button>
-                <Button onClick={() => setQuestionType("ordering")}>+ Ordering</Button>
-            </div>
-            {questionType === "singleChoice" && <SingleChoiceForm />}
-            {questionType === "multiChoice" && <h1>Multi choice</h1>}
-            {questionType === "ordering" && <h1>Ordering</h1>}
-        </>
+        <Formik initialValues={{} as any} onSubmit={handleSubmitForm}>
+            {({ values, handleChange, handleBlur, setFieldValue }) => (
+                <Form className="my-2">
+                    <FormGroup>
+                        <FormLabel>Content: </FormLabel>
+                        <TinyEditor height={150} handleChange={(v) => setFieldValue("content", v)} />
+                    </FormGroup>
+                    <FormGroup>
+                        <FormLabel>Question number: </FormLabel>
+                        <FormControl name="questionNumber" onChange={handleChange} onBlur={handleBlur} required />
+                    </FormGroup>
+                    <FormGroup>
+                        <FormLabel>Answers: </FormLabel>
+                        <FormControl name="answer" onChange={handleChange} onBlur={handleBlur} required />
+                        <FormText>Comma seprated, Ex: A,B,C,...</FormText>
+                    </FormGroup>
+                    <div className="my-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1em" }}>
+                        <FormControl name="A" value={values.options?.A} onChange={handleChange} onBlur={handleBlur} placeholder="A" />
+                        <FormControl name="B" value={values.options?.B} onChange={handleChange} onBlur={handleBlur} placeholder="B" />
+                        <FormControl name="C" value={values.options?.C} onChange={handleChange} onBlur={handleBlur} placeholder="C" />
+                        <FormControl name="D" value={values.options?.D} onChange={handleChange} onBlur={handleBlur} placeholder="D" />
+                        <FormControl name="E" value={values.options?.E} onChange={handleChange} onBlur={handleBlur} placeholder="E" />
+                    </div>
+                    <Button className="mt-2" type="submit" variant="success">
+                        Save
+                    </Button>
+                </Form>
+            )}
+        </Formik>
+    );
+};
+
+export const OrderingForm = ({
+    examId,
+    section,
+    questionParentId,
+    handleSubmit,
+}: {
+    examId: string;
+    section: sections;
+    questionParentId: string;
+    handleSubmit: () => void;
+}) => {
+    const handleSubmitForm = async (d: any) => {
+        try {
+            const resp = await createExamQuestion({
+                examId,
+                questionParentId,
+                type: "ordering",
+                content: d.content,
+                questionNumber: d.questionNumber,
+                section: null,
+                part: null,
+                options: {
+                    A: d.A,
+                    B: d.B,
+                    C: d.C,
+                    D: d.D,
+                    E: d.E,
+                },
+                answer: d.answer.split(",").map((c: string) => c.toUpperCase()),
+            });
+            if (resp && resp.status === 200) {
+                handleSubmit();
+                mutate(`/admin/questions?examId=${examId}&section=${section}`);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    return (
+        <Formik initialValues={{} as any} onSubmit={handleSubmitForm}>
+            {({ values, handleChange, handleBlur, setFieldValue }) => (
+                <Form className="my-2">
+                    <FormGroup>
+                        <FormLabel>Content: </FormLabel>
+                        <TinyEditor height={150} handleChange={(v) => setFieldValue("content", v)} />
+                    </FormGroup>
+                    <FormGroup>
+                        <FormLabel>Question number: </FormLabel>
+                        <FormControl name="questionNumber" onChange={handleChange} onBlur={handleBlur} required />
+                    </FormGroup>
+                    <FormGroup>
+                        <FormLabel>Answers: </FormLabel>
+                        <FormControl name="answer" onChange={handleChange} onBlur={handleBlur} required />
+                        <FormText>
+                            Comma seprated, <strong>Order is important</strong> Ex: A,B,C,...
+                        </FormText>
+                    </FormGroup>
+                    <div className="my-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1em" }}>
+                        <FormControl name="A" value={values.options?.A} onChange={handleChange} onBlur={handleBlur} placeholder="A" />
+                        <FormControl name="B" value={values.options?.B} onChange={handleChange} onBlur={handleBlur} placeholder="B" />
+                        <FormControl name="C" value={values.options?.C} onChange={handleChange} onBlur={handleBlur} placeholder="C" />
+                        <FormControl name="D" value={values.options?.D} onChange={handleChange} onBlur={handleBlur} placeholder="D" />
+                        <FormControl name="E" value={values.options?.E} onChange={handleChange} onBlur={handleBlur} placeholder="E" />
+                    </div>
+                    <Button className="mt-2" type="submit" variant="success">
+                        Save
+                    </Button>
+                </Form>
+            )}
+        </Formik>
     );
 };

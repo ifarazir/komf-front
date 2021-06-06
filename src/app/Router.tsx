@@ -22,6 +22,7 @@ import { selectSession } from "./features/session/sessionsSlice";
 import AdminCourseDetail from "./pages/AdminCourseDetail";
 import AdminLessonDetail from "./pages/AdminLessonDetail";
 import ProfilePage from "./pages/Profile";
+import ExamDetails from "./pages/ExamDetails";
 
 export default function MainRouter() {
     const session = useSelector(selectSession);
@@ -43,6 +44,7 @@ export default function MainRouter() {
                 {isAdmin && <Lesson path="lesson" />}
                 {isAdmin && <AdminLessonDetail path="lesson/:lessonId" />}
                 {isAdmin && <ExamAdmin path="exam" />}
+                {isAdmin && <ExamDetails path="exam/:examId" />}
                 {isAdmin && <VocabAdmin path="vocab" />}
                 {isAdmin && <Report path="report" />}
             </Home>

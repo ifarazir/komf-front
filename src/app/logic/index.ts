@@ -13,7 +13,16 @@ Axios.interceptors.request.use((config) => {
     return config;
 });
 
-// const NodeAxios = Axios.create({baseURL:''})
+export const NodeAxios = Axios.create({ baseURL: "http://localhost:3002" });
+
+export const nodeFetcher = async (url: string) => {
+    try {
+        const resp = await NodeAxios.get(url);
+        return resp.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
 export const fetcher = async (url: string) => {
     try {

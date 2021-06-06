@@ -17,7 +17,7 @@ export default function TinyEditor({
     return (
         <Editor
             apiKey="2qg5sl58q16in9tr36a90vjugtsajkt4gmb40nvvewo64q7j"
-            initialValue={initialValue ? initialValue : "<p>Initial content</p>"}
+            initialValue={initialValue}
             init={{
                 height: height ? height : 450,
                 menubar: false,

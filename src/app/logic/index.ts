@@ -13,8 +13,8 @@ Axios.interceptors.request.use((config) => {
     return config;
 });
 
-export const NodeAxios = Axios.create({ baseURL: "http://localhost:3002" });
-// export const NodeAxios = Axios.create({ baseURL: "https://node.komf.ir" });
+// export const NodeAxios = Axios.create({ baseURL: "http://localhost:3002" });
+export const NodeAxios = Axios.create({ baseURL: "https://node.komf.ir" });
 
 export const nodeFetcher = async (url: string) => {
     try {

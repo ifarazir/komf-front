@@ -17,7 +17,11 @@ export default function Exam(props: RouteComponentProps) {
     const [state, setState] = useState<{ part: number; qnumber: number }>({ part: 0, qnumber: 0 });
     const [answers, setAnswers] = useState<answersType[]>([]);
 
-    const { data: questions } = useSWR("/student/question_instances/", nodeFetcher);
+    const {
+        data: questions,
+        error,
+        mutate,
+    } = useSWR("/student/question_instances/", nodeFetcher, { refreshInterval: 3000 });
     const hasSubQuestions =
         questions && (questions.data.section === "reading" || questions.data.section === "listening");
 
@@ -42,9 +46,8 @@ export default function Exam(props: RouteComponentProps) {
             const resp = await postAnswers(answers);
             console.log(resp);
 
-            if (questions.section === "writing") {
-                props.navigate && props.navigate("../");
-            }
+            mutate();
+
             setAnswers([]);
             setState({ part: 0, qnumber: 0 });
         } catch (error) {
@@ -66,6 +69,10 @@ export default function Exam(props: RouteComponentProps) {
             }
         }
     };
+
+    if (error) {
+        props.navigate && props.navigate("/exam");
+    }
 
     if (!questions) {
         return (

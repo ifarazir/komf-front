@@ -16,7 +16,7 @@ const SingleChoice = ({
 }) => {
     const handleClick = (option: string) => {
         onAnswer(option);
-        setSelected(option);
+        // setSelected(option);
     };
 
     const getColor = (option: string) => (selected === option ? "success" : "primary");
@@ -181,6 +181,10 @@ export const SubQuestion = ({ question, setAnswer }: { question: questionType; s
         return res;
     };
 
+    useEffect(() => {
+        setSelected(undefined);
+    }, [question]);
+
     if (!question) return <></>;
 
     switch (question.type) {
@@ -191,7 +195,7 @@ export const SubQuestion = ({ question, setAnswer }: { question: questionType; s
                     selected={selected}
                     setSelected={setSelected}
                     onAnswer={(o) => {
-                        setSelected(undefined);
+                        setSelected(o);
                         setAnswer((prev: any) =>
                             findAndSetAnswer(prev, { questionInstanceId: question._id, choices: [o] })
                         );

@@ -36,8 +36,8 @@ export default function TopNavBar() {
 
     return (
         <div className={styles.nav}>
-            <Link to="/panel" className={styles.navLink}>
-                <i className={"bi " + location.pathname !== "/panel" ? "bi-house-door-fill" : "bi-house-door"} />
+            <Link to="/" className={styles.navLink}>
+                <i className={"bi " + location.pathname !== "/" ? "bi-house-door-fill" : "bi-house-door"} />
                 Home
             </Link>
             {/* <Link to="report" className={styles.navLink}>

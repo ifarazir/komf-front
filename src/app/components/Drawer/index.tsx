@@ -25,19 +25,19 @@ export default function Drawer() {
                 </div>
                 <ul>
                     <li>
-                        <Link to="/panel" className={location.pathname === "/panel" ? styles.active : ""}>
+                        <Link to="/" className={location.pathname === "/" ? styles.active : ""}>
                             <i className={"bi bi-house-door"} />
                             Home
                         </Link>
                     </li>
                     <li>
-                        <Link to="profile" className={location.pathname === "/panel/profile" ? styles.active : ""}>
+                        <Link to="profile" className={location.pathname === "/profile" ? styles.active : ""}>
                             <i className={"bi bi-person"} />
                             Profile
                         </Link>
                     </li>
                     {/* <li>
-                        <Link to="report" className={location.pathname === "/panel/report" ? styles.active : ""}>
+                        <Link to="report" className={location.pathname === "/report" ? styles.active : ""}>
                             <i className="bi bi-bar-chart" />
                             Report
                         </Link>
@@ -59,7 +59,7 @@ export default function Drawer() {
                     )}
                     {isAdmin && (
                         <li>
-                            <Link to="course" className={location.pathname === "/panel/course" ? styles.active : ""}>
+                            <Link to="course" className={location.pathname === "/course" ? styles.active : ""}>
                                 <i className="bi bi-pencil" />
                                 Course
                             </Link>

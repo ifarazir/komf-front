@@ -1,18 +1,18 @@
 import { useSelector } from "react-redux";
 import { Card, Button, FormControl } from "react-bootstrap";
-import { useDispatch } from "react-redux";
 import { Link, Redirect, RouteComponentProps } from "@reach/router";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
-import { registerType } from "../../logic/auth";
+import { getSavedToken, registerType } from "../../logic/auth";
 import { selectSession, registerUser } from "./sessionsSlice";
 
 import styles from "./card.module.css";
+import { useAppDispatch } from "../../store";
 
 export default function SignupForm(props: RouteComponentProps) {
-    const sessions = useSelector(selectSession);
-    const dispatch = useDispatch();
+    const session = useSelector(selectSession);
+    const dispatch = useAppDispatch();
 
     const schema = Yup.object().shape({
         fname: Yup.string().required(),
@@ -22,13 +22,18 @@ export default function SignupForm(props: RouteComponentProps) {
         password: Yup.string().required().min(4),
     });
 
-    const handleSubmit = (data: any) => {
-        dispatch(registerUser(data));
-        // console.log(data);
+    const handleSubmit = async (data: any) => {
+        try {
+            await dispatch(registerUser(data));
+            props.navigate && props.navigate("/auth");
+            // console.log(data);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
-    return sessions ? (
-        <Redirect noThrow to="/panel" />
+    return getSavedToken() || session?.status === "authorized" ? (
+        <Redirect noThrow to="/" />
     ) : (
         <Card className={"shadow-lg " + styles.card}>
             <Card.Body>

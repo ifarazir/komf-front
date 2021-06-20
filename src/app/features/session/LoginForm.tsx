@@ -10,11 +10,12 @@ import { useAppDispatch } from "../../store";
 import { selectSession, loginUser } from "./sessionsSlice";
 
 import styles from "./card.module.css";
+import { getSavedToken } from "../../logic/auth";
 
 export default function LoginForm(props: RouteComponentProps) {
     const [error, setError] = useState("");
     const dispatch = useAppDispatch();
-    const sessions = useSelector(selectSession);
+    const session = useSelector(selectSession);
 
     const schema = Yup.object().shape({
         email: Yup.string().required().email(),
@@ -33,8 +34,8 @@ export default function LoginForm(props: RouteComponentProps) {
         }
     };
 
-    return sessions ? (
-        <Redirect noThrow to="/panel" />
+    return getSavedToken() || session?.status === "authorized" ? (
+        <Redirect noThrow to="/" />
     ) : (
         <Card className={"shadow-lg " + styles.card}>
             <Card.Body>

@@ -6,7 +6,7 @@ import MyCard from "../../components/Card";
 import { fetcher } from "../../logic";
 
 export default function LatestCourse() {
-    const { data, error } = useSWR("/api/courses", fetcher);
+    const { data, error } = useSWR("/courses");
 
     let content;
     if (!data) {

@@ -24,13 +24,13 @@ export default function ProfilePage(props: RouteComponentProps) {
                 <Col xs={12} sm={6}>
                     <Card>
                         <div className="d-flex">
-                            <Image
+                            {/* <Image
                                 src={samp}
                                 fluid
                                 style={{ flex: 1, objectFit: "cover", width: "100%" }}
                                 rounded
                                 alt={`${profile.fname} ${profile.lname}`}
-                            />
+                            /> */}
                             <div className="align-items-start ml-2" style={{ flex: 2 }}>
                                 <h6>{`${profile.fname} ${profile.lname}`}</h6>
                                 <p className="text-muted">{profile.email}</p>

@@ -24,7 +24,7 @@ export const fetchUser = createAsyncThunk("session/fetchUser", async () => {
 
 interface IInitial {
     session: any;
-    status: "authorized" | "unauthorized" | "authorizing" | "error" | 'logging_out';
+    status: "authorized" | "unauthorized" | "authorizing" | "error" | "logging_out";
     error?: string;
 }
 
@@ -61,16 +61,16 @@ const sessionSlice = createSlice({
         });
         builder.addCase(registerUser.rejected, (state, action: any) => {
             state.status = "unauthorized";
-            state.error = action.payload.message;
+            state.error = "failed !!";
         });
 
         builder.addCase(loginUser.pending, (state, action) => {
             state.status = "authorizing";
         });
         builder.addCase(loginUser.fulfilled, (state, action) => {
-            if(action.payload.status === 'failed'){
+            if (action.payload.status === "failed") {
                 state.status = "unauthorized";
-                state.error = action.payload.message;
+                state.error = "failed !!";
             } else {
                 state.status = "authorized";
                 state.session = action.payload.data;
@@ -78,7 +78,7 @@ const sessionSlice = createSlice({
         });
         builder.addCase(loginUser.rejected, (state, action: any) => {
             state.status = "unauthorized";
-            state.error = action.payload.message;
+            state.error = "failed !!";
         });
 
         builder.addCase(logoutUser.pending, (state, action) => {
@@ -90,7 +90,7 @@ const sessionSlice = createSlice({
         });
         builder.addCase(logoutUser.rejected, (state, action: any) => {
             state.status = "error";
-            state.error = action.payload.message;
+            state.error = "failed !!";
         });
     },
 });

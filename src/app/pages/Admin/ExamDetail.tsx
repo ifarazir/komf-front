@@ -88,7 +88,10 @@ export default function ExamDetails(props: RouteComponentProps) {
                     <QuestionsList
                         examId={examId}
                         section={activeTab}
-                        handleAddSubQuestion={() => setSubQModal(true)}
+                        handleAddSubQuestion={(id) => {
+                            setQParentId(id);
+                            setSubQModal(true);
+                        }}
                     />
                 </Tab>
                 <Tab eventKey="writing" title="Writing">

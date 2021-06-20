@@ -38,12 +38,16 @@ export default function LessonTable({
                         {lessons.map((l) => (
                             <tr key={l.id}>
                                 <td>
-                                    <Link to={`/panel/lesson/${l.id}`} state={l}>
+                                    <Link to={`/lesson/${l.id}`} state={l}>
                                         {l.title}
                                     </Link>
                                 </td>
                                 <td>
-                                    <Button title="Vocabs" variant="outline-warning" onClick={() => onLessonSelected(l)}>
+                                    <Button
+                                        title="Vocabs"
+                                        variant="outline-warning"
+                                        onClick={() => onLessonSelected(l)}
+                                    >
                                         <i className="bi bi-pencil" />
                                     </Button>
                                 </td>

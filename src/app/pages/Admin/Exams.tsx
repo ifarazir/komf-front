@@ -1,12 +1,12 @@
 import { Container } from "react-bootstrap";
 import { RouteComponentProps } from "@reach/router";
 
-import VocabIndex from "../features/vocab";
+import ExamIndex from "../../features/exam";
 
-export default function VocabAdmin(props: RouteComponentProps) {
+export default function ExamAdmin(props: RouteComponentProps) {
     return (
         <Container fluid className="mt-2">
-            <VocabIndex />
+            <ExamIndex />
         </Container>
     );
 }

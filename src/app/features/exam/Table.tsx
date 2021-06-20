@@ -1,4 +1,4 @@
-import { Spinner, Table } from "react-bootstrap";
+import { Alert, Spinner, Table } from "react-bootstrap";
 import useSWR from "swr";
 
 import SearchForm from "../../components/Ribbons/SearchForm";
@@ -7,8 +7,12 @@ import { nodeFetcher } from "../../logic";
 import { examType } from "../../logic/exam";
 import { Link } from "@reach/router";
 
-export default function LessonTable() {
-    const { data: exams } = useSWR("/admin/exams", nodeFetcher);
+export default function ExamTable() {
+    const { data: exams, error } = useSWR("/admin/exams", nodeFetcher);
+
+    if (error) {
+        return <Alert variant="danger">{String(error)}</Alert>;
+    }
 
     if (!exams) {
         return <Spinner animation="border" />;

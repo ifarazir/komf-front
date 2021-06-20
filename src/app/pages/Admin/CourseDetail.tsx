@@ -3,15 +3,15 @@ import { Button, Container, Spinner } from "react-bootstrap";
 import { RouteComponentProps } from "@reach/router";
 import useSWR, { mutate } from "swr";
 
-import Card from "../components/Card";
-import Confirm from "../components/Confirm";
+import Card from "../../components/Card";
+import Confirm from "../../components/Confirm";
 
-import LessonTable from "../features/lesson/Table";
-import LessonModal from "../features/lesson/Modals";
-import CourseModal from "../features/course/Modals";
+import LessonTable from "../../features/lesson/Table";
+import LessonModal from "../../features/lesson/Modals";
+import CourseModal from "../../features/course/Modals";
 
-import { deleteLesson, lessonType } from "../logic/lesson";
-import { fetcher } from "../logic";
+import { deleteLesson, lessonType } from "../../logic/lesson";
+import { fetcher } from "../../logic";
 
 export default function AdminCourseDetail(props: RouteComponentProps) {
     const courseId = (props as any).courseId;

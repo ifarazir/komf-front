@@ -21,9 +21,9 @@ export const getVocabs = async () => {
     }
 };
 
-export const createVocab = async (data:IBaseVocab) => {
+export const createVocab = async (lessonnId:string, data:IBaseVocab) => {
     try {
-        const resp = await Axios.post('/admin/vocabs', data);
+        const resp = await Axios.post(`/api/admin/lessons/${lessonnId}/vocabs/add`, data);
         return resp.data;
     } catch (error) {
         throw error;

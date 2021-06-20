@@ -1,9 +1,9 @@
 import { FormControl, Modal, Button, FormGroup, FormLabel } from "react-bootstrap";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import useSWR from "swr";
 
 import { IQuizQuestion, createQuizQuesion, updateQuizQuestion } from "../../logic/quiz";
-import { useQuery } from "../../common/hooks";
 import { lessonType, getLessons } from "../../logic/lesson";
 import TinyEditor from "../../components/Editor";
 
@@ -18,8 +18,7 @@ export default function QuizQuestionModal({
     handleClose: () => void;
     onDone: () => void;
 }) {
-    const { data } = useQuery<lessonType>(getLessons);
-    const lessons = data;
+    const { data: lessons } = useSWR("/admin/lessons");
 
     const schema = Yup.object().shape({
         title: Yup.string().required(),
@@ -89,19 +88,39 @@ export default function QuizQuestionModal({
                                     </FormGroup>
                                     <FormGroup>
                                         <FormLabel>Option 1:</FormLabel>
-                                        <FormControl name="q1" value={values.q1} onChange={handleChange} onBlur={handleBlur} />
+                                        <FormControl
+                                            name="q1"
+                                            value={values.q1}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                        />
                                     </FormGroup>
                                     <FormGroup>
                                         <FormLabel>Option 2:</FormLabel>
-                                        <FormControl name="q2" value={values.q2} onChange={handleChange} onBlur={handleBlur} />
+                                        <FormControl
+                                            name="q2"
+                                            value={values.q2}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                        />
                                     </FormGroup>
                                     <FormGroup>
                                         <FormLabel>Option 3:</FormLabel>
-                                        <FormControl name="q3" value={values.q3} onChange={handleChange} onBlur={handleBlur} />
+                                        <FormControl
+                                            name="q3"
+                                            value={values.q3}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                        />
                                     </FormGroup>
                                     <FormGroup>
                                         <FormLabel>Option 4:</FormLabel>
-                                        <FormControl name="q4" value={values.q4} onChange={handleChange} onBlur={handleBlur} />
+                                        <FormControl
+                                            name="q4"
+                                            value={values.q4}
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                        />
                                     </FormGroup>
                                     <FormGroup>
                                         <FormLabel>Course:</FormLabel>
@@ -113,9 +132,9 @@ export default function QuizQuestionModal({
                                             onChange={handleChange}
                                             onBlur={handleBlur}
                                         >
-                                            {lessons.map((c) => (
-                                                <option value={c.id}>{c.title}</option>
-                                            ))}
+                                            {lessons
+                                                ? lessons.data.map((c: any) => <option value={c.id}>{c.title}</option>)
+                                                : null}
                                         </FormControl>
                                     </FormGroup>
                                 </div>

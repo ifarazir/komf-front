@@ -2,12 +2,21 @@ import React, { useState } from "react";
 import { FormControl, Button, FormGroup, FormLabel, Alert, FormText } from "react-bootstrap";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import Select from "react-select";
 
 import { createExamQuestion, questionType, sections } from "../../logic/question";
 import TinyEditor from "../../components/Editor";
 import { mutate } from "swr";
 
-export const QuestionBodyForm = ({ handleSubmit, examId, section }: { handleSubmit: () => void; section: sections; examId: string }) => {
+export const QuestionBodyForm = ({
+    handleSubmit,
+    examId,
+    section,
+}: {
+    handleSubmit: () => void;
+    section: sections;
+    examId: string;
+}) => {
     const [error, setError] = useState<any>();
 
     return (
@@ -45,7 +54,13 @@ export const QuestionBodyForm = ({ handleSubmit, examId, section }: { handleSubm
                     )}
                     <FormGroup>
                         <FormLabel>Part: </FormLabel>
-                        <FormControl as="select" name="part" onChange={handleChange} onBlur={handleBlur} value={values.part}>
+                        <FormControl
+                            as="select"
+                            name="part"
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            value={values.part}
+                        >
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -77,6 +92,7 @@ export const SingleChoiceForm = ({
 }) => {
     const handleSubmitForm = async (d: any) => {
         try {
+            // console.log(d);
             const resp = await createExamQuestion({
                 examId,
                 questionParentId,
@@ -112,30 +128,58 @@ export const SingleChoiceForm = ({
                     </FormGroup>
                     <FormGroup>
                         <FormLabel>Question number: </FormLabel>
-                        <FormControl name="questionNumber" value={values.questionNumber} onChange={handleChange} onBlur={handleBlur} />
+                        <FormControl
+                            name="questionNumber"
+                            value={values.questionNumber}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                        />
                     </FormGroup>
                     <FormGroup>
                         <FormLabel>Answer: </FormLabel>
-                        <FormControl
-                            className="mt-2"
-                            as="select"
+                        <Select
                             name="answer"
-                            value={values.answer}
-                            onChange={handleChange}
+                            className="basic-single mt-2"
+                            classNamePrefix="select"
+                            options={[
+                                { label: "A", value: "A" },
+                                { label: "B", value: "B" },
+                                { label: "C", value: "C" },
+                                { label: "D", value: "D" },
+                            ]}
+                            onChange={(v) => setFieldValue("answer", v?.value)}
                             onBlur={handleBlur}
-                        >
-                            {["A", "B", "C", "D"].map((choice) => (
-                                <option key={choice} value={choice}>
-                                    {choice}
-                                </option>
-                            ))}
-                        </FormControl>
+                        />
                     </FormGroup>
                     <div className="my-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1em" }}>
-                        <FormControl name="A" value={values.options?.A} onChange={handleChange} onBlur={handleBlur} placeholder="A" />
-                        <FormControl name="B" value={values.options?.B} onChange={handleChange} onBlur={handleBlur} placeholder="B" />
-                        <FormControl name="C" value={values.options?.C} onChange={handleChange} onBlur={handleBlur} placeholder="C" />
-                        <FormControl name="D" value={values.options?.D} onChange={handleChange} onBlur={handleBlur} placeholder="D" />
+                        <FormControl
+                            name="A"
+                            value={values.options?.A}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="A"
+                        />
+                        <FormControl
+                            name="B"
+                            value={values.options?.B}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="B"
+                        />
+                        <FormControl
+                            name="C"
+                            value={values.options?.C}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="C"
+                        />
+                        <FormControl
+                            name="D"
+                            value={values.options?.D}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="D"
+                        />
                     </div>
                     <Button className="mt-2" type="submit" variant="success">
                         Save
@@ -199,15 +243,57 @@ export const MultiChoiceForm = ({
                     </FormGroup>
                     <FormGroup>
                         <FormLabel>Answers: </FormLabel>
-                        <FormControl name="answer" onChange={handleChange} onBlur={handleBlur} required />
-                        <FormText>Comma seprated, Ex: A,B,C,...</FormText>
+                        <Select
+                            name="answer"
+                            className="basic-single mt-2"
+                            classNamePrefix="select"
+                            isMulti
+                            options={[
+                                { label: "A", value: "A" },
+                                { label: "B", value: "B" },
+                                { label: "C", value: "C" },
+                                { label: "D", value: "D" },
+                            ]}
+                            onChange={(v) => setFieldValue("answer", v.map((a) => a.value).join(","))}
+                            onBlur={handleBlur}
+                        />
                     </FormGroup>
                     <div className="my-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1em" }}>
-                        <FormControl name="A" value={values.options?.A} onChange={handleChange} onBlur={handleBlur} placeholder="A" />
-                        <FormControl name="B" value={values.options?.B} onChange={handleChange} onBlur={handleBlur} placeholder="B" />
-                        <FormControl name="C" value={values.options?.C} onChange={handleChange} onBlur={handleBlur} placeholder="C" />
-                        <FormControl name="D" value={values.options?.D} onChange={handleChange} onBlur={handleBlur} placeholder="D" />
-                        <FormControl name="E" value={values.options?.E} onChange={handleChange} onBlur={handleBlur} placeholder="E" />
+                        <FormControl
+                            name="A"
+                            value={values.options?.A}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="A"
+                        />
+                        <FormControl
+                            name="B"
+                            value={values.options?.B}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="B"
+                        />
+                        <FormControl
+                            name="C"
+                            value={values.options?.C}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="C"
+                        />
+                        <FormControl
+                            name="D"
+                            value={values.options?.D}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="D"
+                        />
+                        <FormControl
+                            name="E"
+                            value={values.options?.E}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="E"
+                        />
                     </div>
                     <Button className="mt-2" type="submit" variant="success">
                         Save
@@ -271,17 +357,60 @@ export const OrderingForm = ({
                     </FormGroup>
                     <FormGroup>
                         <FormLabel>Answers: </FormLabel>
-                        <FormControl name="answer" onChange={handleChange} onBlur={handleBlur} required />
+                        <Select
+                            name="answer"
+                            className="basic-single mt-2"
+                            classNamePrefix="select"
+                            isMulti
+                            options={[
+                                { label: "A", value: "A" },
+                                { label: "B", value: "B" },
+                                { label: "C", value: "C" },
+                                { label: "D", value: "D" },
+                            ]}
+                            onChange={(v) => setFieldValue("answer", v.map((a) => a.value).join(","))}
+                            onBlur={handleBlur}
+                        />
                         <FormText>
-                            Comma seprated, <strong>Order is important</strong> Ex: A,B,C,...
+                            <strong>Order is important</strong>
                         </FormText>
                     </FormGroup>
                     <div className="my-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1em" }}>
-                        <FormControl name="A" value={values.options?.A} onChange={handleChange} onBlur={handleBlur} placeholder="A" />
-                        <FormControl name="B" value={values.options?.B} onChange={handleChange} onBlur={handleBlur} placeholder="B" />
-                        <FormControl name="C" value={values.options?.C} onChange={handleChange} onBlur={handleBlur} placeholder="C" />
-                        <FormControl name="D" value={values.options?.D} onChange={handleChange} onBlur={handleBlur} placeholder="D" />
-                        <FormControl name="E" value={values.options?.E} onChange={handleChange} onBlur={handleBlur} placeholder="E" />
+                        <FormControl
+                            name="A"
+                            value={values.options?.A}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="A"
+                        />
+                        <FormControl
+                            name="B"
+                            value={values.options?.B}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="B"
+                        />
+                        <FormControl
+                            name="C"
+                            value={values.options?.C}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="C"
+                        />
+                        <FormControl
+                            name="D"
+                            value={values.options?.D}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="D"
+                        />
+                        <FormControl
+                            name="E"
+                            value={values.options?.E}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="E"
+                        />
                     </div>
                     <Button className="mt-2" type="submit" variant="success">
                         Save

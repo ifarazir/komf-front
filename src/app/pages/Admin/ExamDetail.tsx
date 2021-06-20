@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { RouteComponentProps } from "@reach/router";
-import { Button, Container, Spinner, Tab, Tabs } from "react-bootstrap";
+import { Alert, Button, Container, Spinner, Tab, Tabs } from "react-bootstrap";
 import useSWR from "swr";
 
-import Card from "../components/Card";
-import { nodeFetcher } from "../logic";
-import QuestionsList from "../features/question/List";
-import { QuestionBodyModal, SubQuestionModal } from "../features/question";
+import Card from "../../components/Card";
+import { nodeFetcher } from "../../logic";
+import QuestionsList from "../../features/question/List";
+import { QuestionBodyModal, SubQuestionModal } from "../../features/question";
 
 export default function ExamDetails(props: RouteComponentProps) {
     const [activeTab, setActiveTab] = useState<"reading" | "listening" | "speaking" | "writing">("reading");
@@ -16,17 +16,25 @@ export default function ExamDetails(props: RouteComponentProps) {
 
     const examId = (props as any).examId;
 
-    const { data: examResp } = useSWR(examId ? [`/admin/exams/${examId}`, examId] : null, nodeFetcher);
+    const { data: examResp, error } = useSWR(examId ? [`/admin/exams/${examId}`, examId] : null, nodeFetcher);
+    const { exam } = examResp !== undefined && examResp?.data;
+
+    if (error) {
+        return <Alert variant="danger">{String(error)}</Alert>;
+    }
 
     if (!examResp) {
         return <Spinner animation="border" />;
     }
 
-    const { exam } = examResp && examResp?.data;
-
     return (
         <Container fluid className="mt-2">
-            <QuestionBodyModal show={questionBodyModal} onClose={() => setQuestionBodyModal(false)} examId={examId} section={activeTab} />
+            <QuestionBodyModal
+                show={questionBodyModal}
+                onClose={() => setQuestionBodyModal(false)}
+                examId={examId}
+                section={activeTab}
+            />
             {qParentId && (
                 <SubQuestionModal
                     show={subQModal}
@@ -74,13 +82,34 @@ export default function ExamDetails(props: RouteComponentProps) {
                     />
                 </Tab>
                 <Tab eventKey="listening" title="Listening">
-                    <QuestionsList examId={examId} section={activeTab} handleAddSubQuestion={() => setSubQModal(true)} />
+                    <Button className="my-2" onClick={() => setQuestionBodyModal(true)}>
+                        + Question body
+                    </Button>
+                    <QuestionsList
+                        examId={examId}
+                        section={activeTab}
+                        handleAddSubQuestion={() => setSubQModal(true)}
+                    />
                 </Tab>
                 <Tab eventKey="writing" title="Writing">
-                    <QuestionsList examId={examId} section={activeTab} handleAddSubQuestion={() => setSubQModal(true)} />
+                    <Button className="my-2" onClick={() => setQuestionBodyModal(true)}>
+                        + Question body
+                    </Button>
+                    <QuestionsList
+                        examId={examId}
+                        section={activeTab}
+                        handleAddSubQuestion={() => setSubQModal(true)}
+                    />
                 </Tab>
                 <Tab eventKey="speaking" title="Speaking">
-                    <QuestionsList examId={examId} section={activeTab} handleAddSubQuestion={() => setSubQModal(true)} />
+                    <Button className="my-2" onClick={() => setQuestionBodyModal(true)}>
+                        + Question body
+                    </Button>
+                    <QuestionsList
+                        examId={examId}
+                        section={activeTab}
+                        handleAddSubQuestion={() => setSubQModal(true)}
+                    />
                 </Tab>
             </Tabs>
         </Container>

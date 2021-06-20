@@ -40,10 +40,10 @@ export default function TopNavBar() {
                 <i className={"bi " + location.pathname !== "/panel" ? "bi-house-door-fill" : "bi-house-door"} />
                 Home
             </Link>
-            <Link to="report" className={styles.navLink}>
+            {/* <Link to="report" className={styles.navLink}>
                 <i className="bi bi-bar-chart" />
                 Report
-            </Link>
+            </Link> */}
             {session && session.role && session.role === "admin" && <AdminDropDown />}
             <a href="#" className={styles.navLink} onClick={handleLogout}>
                 Logout

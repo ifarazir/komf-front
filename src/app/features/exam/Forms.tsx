@@ -1,28 +1,33 @@
-import React from "react";
-import { FormControl, Button, Row, Col, FormGroup, FormLabel } from "react-bootstrap";
+import { useState } from "react";
+import { FormControl, Button, Row, Col, FormGroup, FormLabel, Alert } from "react-bootstrap";
 import { Formik, Form } from "formik";
-import * as Yup from "yup";
 
 import { createExam, examType } from "../../logic/exam";
 import { mutate } from "swr";
 
 export default function ExamForm({ onSubmit }: { onSubmit: () => void }) {
+    const [isSucess, setIsSucess] = useState(true);
+    const [showMsg, setShowMsg] = useState(false);
+    const [msg, setMsg] = useState("");
+
     const handleSubmit = async (d: any) => {
         try {
-            // console.log({
-            //     description: d.description,
-            //     duration: { reading: d.reading, speaking: d.speaking, listening: d.listening, writing: d.writing },
-            // });
             const resp = await createExam({
                 description: d.description,
                 duration: { reading: d.reading, speaking: d.speaking, listening: d.listening, writing: d.writing },
+                status: d.status ? d.status : "active",
             });
-            if (resp.message === "Exam created successfully") {
-                mutate("/admin/exams");
-                onSubmit();
-            }
+
+            setMsg(resp.data.message);
+            setIsSucess(true);
+
+            mutate("/admin/exams");
+            onSubmit();
         } catch (error) {
-            console.log(error);
+            setMsg(String(error.response.data.errorDetail.details.map((e: any) => e.message)));
+            setIsSucess(false);
+        } finally {
+            setShowMsg(true);
         }
     };
 
@@ -32,6 +37,7 @@ export default function ExamForm({ onSubmit }: { onSubmit: () => void }) {
                 <Form>
                     <Row>
                         <Col xs={12}>
+                            {showMsg && <Alert variant={isSucess ? "success" : "danger"}>{msg}</Alert>}
                             <FormGroup>
                                 <FormLabel>Description:</FormLabel>
                                 <FormControl
@@ -43,6 +49,24 @@ export default function ExamForm({ onSubmit }: { onSubmit: () => void }) {
                                     onChange={handleChange}
                                     onBlur={handleBlur}
                                 />
+                            </FormGroup>
+                        </Col>
+                        <Col xs={12}>
+                            <FormGroup>
+                                <FormLabel>Status:</FormLabel>
+                                <FormControl
+                                    required
+                                    as="select"
+                                    name="status"
+                                    placeholder="Status"
+                                    value={values.status}
+                                    onChange={handleChange}
+                                    onBlur={handleBlur}
+                                >
+                                    <option value="active">active</option>
+                                    <option value="draft">draft</option>
+                                    <option value="close">close</option>
+                                </FormControl>
                             </FormGroup>
                         </Col>
                         <Col xs={3}>

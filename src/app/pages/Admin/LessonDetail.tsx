@@ -1,21 +1,21 @@
 import { useState } from "react";
 import { Button, Container, Tabs, Tab, Spinner } from "react-bootstrap";
 import { RouteComponentProps } from "@reach/router";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr";
 
-import Card from "../components/Card";
+import Card from "../../components/Card";
+import Confirm from "../../components/Confirm";
 
-import VocabsTable from "../features/vocab/Table";
-import QuizQuestionModal from "../features/quiz/Modals";
-import QuizQuestionTable from "../features/quiz/Table";
-import LessonModal from "../features/lesson/Modals";
+import VocabsTable from "../../features/vocab/Table";
+import QuizQuestionModal from "../../features/quiz/Modals";
+import QuizQuestionTable from "../../features/quiz/Table";
+import LessonModal from "../../features/lesson/Modals";
+import VocabModal from "../../features/vocab/Modals";
 
-import { deleteQuizQuestion, IQuizQuestion } from "../logic/quiz";
-import { lessonType } from "../logic/lesson";
-import { fetcher } from "../logic";
-import VocabModal from "../features/vocab/Modals";
-import { deleteVocab, IVocab } from "../logic/vocab";
-import Confirm from "../components/Confirm";
+import { deleteQuizQuestion, IQuizQuestion } from "../../logic/quiz";
+import { lessonType } from "../../logic/lesson";
+import { fetcher } from "../../logic";
+import { deleteVocab, IVocab } from "../../logic/vocab";
 
 export default function AdminLessonDetail(props: RouteComponentProps) {
     const [quizQuestionModal, setQuizQuestionModal] = useState(false);
@@ -29,7 +29,7 @@ export default function AdminLessonDetail(props: RouteComponentProps) {
 
     const lesson: lessonType | undefined = props?.location?.state as lessonType;
 
-    const { data: vocabs, mutate: mutateVocabs } = useSWR("/admin/vocabs", fetcher);
+    const { data: vocabs, mutate: mutateVocabs } = useSWR(lesson.id ? `lessons/${lesson.id}/vocabs` : null, fetcher);
     const { data: quizQestions, mutate: mutateQuizQeustions } = useSWR("/admin/quiz/questions", fetcher);
 
     const handleDeleteVocab = async () => {
@@ -68,11 +68,25 @@ export default function AdminLessonDetail(props: RouteComponentProps) {
                 handleClose={() => setQuizQuestionModal(false)}
                 onDone={mutateQuizQeustions}
             />
-            <VocabModal show={vocabModal} handleClose={() => setVocabModal(false)} selectedVocab={selectedVocab} onDone={mutateVocabs} />
+            <VocabModal
+                show={vocabModal}
+                handleClose={() => setVocabModal(false)}
+                selectedVocab={selectedVocab}
+                selectedLesson={lesson}
+                onDone={mutateVocabs}
+            />
             <LessonModal show={lessonModal} handleClose={() => setLessonModal(false)} selectedLesson={lesson} />
 
-            <Confirm show={confirmDeleteVocab} onClose={() => setConfirmDeleteVocab(false)} onConfirm={handleDeleteVocab} />
-            <Confirm show={confirmDeleteQuestion} onClose={() => setConfirmDeleteQuestion(false)} onConfirm={handleDeleteQuizQuestion} />
+            <Confirm
+                show={confirmDeleteVocab}
+                onClose={() => setConfirmDeleteVocab(false)}
+                onConfirm={handleDeleteVocab}
+            />
+            <Confirm
+                show={confirmDeleteQuestion}
+                onClose={() => setConfirmDeleteQuestion(false)}
+                onConfirm={handleDeleteQuizQuestion}
+            />
 
             <Card>
                 <div className="d-flex align-items-start justify-content-between">

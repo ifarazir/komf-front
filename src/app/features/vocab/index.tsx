@@ -42,7 +42,7 @@ export default function VocabIndex() {
                 text={`You are going to delete vocab ${selectedVocab?.word} forever`}
             />
 
-            <VocabModal show={vocabModal} handleClose={() => setVocabModal(false)} selectedVocab={selectedVocab} onDone={revalidate} />
+            {/* <VocabModal show={vocabModal} handleClose={() => setVocabModal(false)} selectedVocab={selectedVocab} onDone={revalidate} /> */}
 
             <div className="my-2 d-flex justify-content-between align-items-center">
                 <div>

@@ -36,15 +36,22 @@ export default function Drawer() {
                             Profile
                         </Link>
                     </li>
-                    <li>
+                    {/* <li>
                         <Link to="report" className={location.pathname === "/panel/report" ? styles.active : ""}>
                             <i className="bi bi-bar-chart" />
                             Report
                         </Link>
-                    </li>
-                    {isAdmin && (
+                    </li> */}
+                    {isAdmin ? (
                         <li>
-                            <Link to="exam" className={location.pathname === "/panel/exam" ? styles.active : ""}>
+                            <Link to="exam" className={location.pathname === "/exam" ? styles.active : ""}>
+                                <i className="bi bi-journal" />
+                                Exam
+                            </Link>
+                        </li>
+                    ) : (
+                        <li>
+                            <Link to="exam" className={location.pathname === "/exam" ? styles.active : ""}>
                                 <i className="bi bi-journal" />
                                 Exam
                             </Link>

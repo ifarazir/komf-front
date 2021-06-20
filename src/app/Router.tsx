@@ -8,21 +8,22 @@ import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import Landing from "./pages/Landing";
 import Exam from "./pages/Exam";
-import UserDashboard from "./pages/UserDashboard";
+import MainExam from "./pages/Exam/Main";
+import UserDashboard from "./pages/User/Dashboard";
 import Course from "./pages/Course";
-import Lesson from "./pages/Lesson";
-import ExamAdmin from "./pages/ExamAdmin";
-import VocabAdmin from "./pages/VocabAdmin";
+// import Lesson from "./pages/Lesson";
+// import VocabAdmin from "./pages/Admin/Vocabs";
+import ExamAdmin from "./pages/Admin/Exams";
 import Report from "./pages/Report";
 
 import LoginForm from "./features/session/LoginForm";
 import SignupForm from "./features/session/SignupForm";
 
 import { selectSession } from "./features/session/sessionsSlice";
-import AdminCourseDetail from "./pages/AdminCourseDetail";
-import AdminLessonDetail from "./pages/AdminLessonDetail";
+import AdminCourseDetail from "./pages/Admin/CourseDetail";
+import AdminLessonDetail from "./pages/Admin/LessonDetail";
 import ProfilePage from "./pages/Profile";
-import ExamDetails from "./pages/ExamDetails";
+import ExamDetails from "./pages/Admin/ExamDetail";
 
 export default function MainRouter() {
     const session = useSelector(selectSession);
@@ -31,21 +32,22 @@ export default function MainRouter() {
     return (
         <Router>
             <Error default />
-            <Landing path="/" />
-            <Exam path="exam/start" />
+            <Landing path="/landing" />
+            <MainExam path="exam/start/:examId" />
 
-            <Home path="panel">
+            <Home path="/">
                 <ProfilePage path="/profile" />
                 {!isAdmin && <UserDashboard path="/" />}
+                {!isAdmin && <Exam path="/exam" />}
 
                 {isAdmin && <Admin path="/" />}
-                {isAdmin && <Course path="course" />}
                 {isAdmin && <AdminCourseDetail path="course/:courseId" />}
-                {isAdmin && <Lesson path="lesson" />}
+                {isAdmin && <Course path="course" />}
+                {/* {isAdmin && <Lesson path="lesson" />} */}
+                {/* {isAdmin && <VocabAdmin path="vocab" />} */}
                 {isAdmin && <AdminLessonDetail path="lesson/:lessonId" />}
                 {isAdmin && <ExamAdmin path="exam" />}
                 {isAdmin && <ExamDetails path="exam/:examId" />}
-                {isAdmin && <VocabAdmin path="vocab" />}
                 {isAdmin && <Report path="report" />}
             </Home>
 

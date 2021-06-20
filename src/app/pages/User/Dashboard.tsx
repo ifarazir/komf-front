@@ -1,7 +1,7 @@
 import { CardDeck, Container } from "react-bootstrap";
 import { RouteComponentProps } from "@reach/router";
 
-import LatestCourse from "../features/course/LatestCourse";
+import LatestCourse from "../../features/course/LatestCourse";
 
 export default function UserPage(props: RouteComponentProps) {
     return (

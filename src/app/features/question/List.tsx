@@ -14,7 +14,7 @@ export default function QuestionsList({
     handleAddSubQuestion: (rowId: string) => void;
 }) {
     const { data: questionsResp } = useSWR(
-        section && examId ? [`/admin/questions?examId=${examId}&section=${section}`, examId, section] : null,
+        section && examId ? `/admin/questions?examId=${examId}&section=${section}` : null,
         nodeFetcher
     );
 

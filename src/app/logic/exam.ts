@@ -9,6 +9,7 @@ export type examType = {
         speaking: number;
     };
     description: string;
+    status: "active" | "close" | "draft";
 };
 
 export const getExams = async () => {
